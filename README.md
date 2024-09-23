@@ -19,7 +19,8 @@ Programming Language - [Python](https://www.python.org/) ![Python](https://githu
 
 Cloud Infrastructure - [Google Cloud Platform (GCP)](https://cloud.google.com/) ![Google Cloud Platform (GCP)](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/Images/Google%20Cloud%20Platform.png)   
 
-Workflow Orchestration: [Mage](https://www.mage.ai/) ![Mage](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/Images/Mage.png)
+Workflow Orchestration: [Mage](https://www.mage.ai/) ![Mage](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/Images/Mage%20ai.png)
+
 (Contibute to this open source project - https://github.com/mage-ai/mage-ai)
 
 Storage: [Google Cloud Storage](https://cloud.google.com/storage) ![Google Cloud Storage](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/Images/Google%20Cloud%20Storage.png)
@@ -34,7 +35,7 @@ Data Visualization: [Google Looker Studio](https://lookerstudio.google.com/) ![G
 
 
 # High Level Architecture
-![GCP_Mage_ETL](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/2.%20Solution%20Architecture/GCP_Mage_ETL.png)
+![GCP Mage ETL Architecture](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/2.%20Solution%20Architecture/GCP%20Mage%20ETL%20Architecture.png)
 
 
 # The Dataset:
