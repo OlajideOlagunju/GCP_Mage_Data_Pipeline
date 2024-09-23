@@ -1,4 +1,4 @@
-# Resolution Rate for Maintenance Work Orders | Google Cloud & Mage Pipeline
+# Resolution Rate for Work Orders | Google Cloud & Mage Pipeline
 An end-to-end solution to process and analyze Maintenance Work Orders using Mage, Google BigQuery, Cloud SQL, and Looker Studio. Seamless integration of cloud tools for scalable data storage, transformation, and visualization.
 
 
@@ -34,7 +34,7 @@ Data Visualization: Looker Studio
 
 
 # High Level Architecture
-
+![GCP_Mage_ETL](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/2.%20Solution%20Architecture/GCP_Mage_ETL.png)
 
 
 # The Dataset:
