@@ -15,22 +15,22 @@ The client needs a solution to automatically ingest their maintenance work order
 
 
 # Tools Used
-Programming Language - Python
+Programming Language - ![Python](https://www.python.org/)  
 
-Cloud Infrastructure - Google Cloud Platform (GCP)
+Cloud Infrastructure - ![Google Cloud Platform (GCP)](https://cloud.google.com/)  
 
-Workflow Orchestration: Mage
+Workflow Orchestration: ![Mage](https://www.mage.ai/) 
 (Contibute to this open source project - https://github.com/mage-ai/mage-ai)
 
-Storage: Google Cloud Storage
+Storage: ![Google Cloud Storage](https://cloud.google.com/storage)  Google Cloud Storage
 
-Database: Google Cloud SQL
+Database: ![Google Cloud SQL](https://cloud.google.com/sql)  
 
-Data Warehouse: Google BigQuery
+Data Warehouse: ![Google BigQuery](https://cloud.google.com/bigquery/)  
 
-Computation: Google Compute Instance 
+Computation: ![Google Compute Engine Instance](https://cloud.google.com/products/compute)  
 
-Data Visualization: Looker Studio
+Data Visualization: ![Google Looker Studio](https://lookerstudio.google.com/)
 
 
 # High Level Architecture
