@@ -37,6 +37,21 @@ Data Visualization: [Google Looker Studio](https://lookerstudio.google.com/) ![G
 # High Level Architecture
 ![GCP Mage ETL Architecture](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/2.%20Solution%20Architecture/GCP%20Mage%20ETL%20Architecture.png)
 
+[//]: # (Explain Architecture Choices for Tools here)
 
-# The Dataset:
-The dataset is a spreadsheet containing maintenance work orders associated with Customer Service Requests. View the data dictionary here to see a more detailed description of the dataset.
+
+
+# The Source Dataset:
+The source data is a spreadsheet containing maintenance work orders associated with Customer Service Requests. [View the data dictionary](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/Data%20Dictionary%20-%20Work%20Order%20Management%20Module%20Dataset.pdf) below see a more detailed description of the dataset.
+![Data Dictionary - Work Order Management Module Dataset](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/bin/Data%20Dictionary%20-%20Work%20Order%20Management%20Module%20Dataset.jpg)
+
+[//]: # (Explain Dataset Nuances)
+
+
+
+# Database Schema
+![Schema - WorkOrderModule DB](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/4.%20Database%20Schema/Schema%20-%20WorkOrderModule%20DB.png)
+![Data Dictionary - WorkOrderModule DB](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/bin/Data%20Dictionary%20-%20WorkOrderModule%20DB.jpg)
+
+[//]: # (Explain Database design reasons, schema type, selections and omissions of 'TIME_STAMP' column)
+
