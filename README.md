@@ -41,7 +41,7 @@ Data Visualization: [Google Looker Studio](https://lookerstudio.google.com/) ![G
 
 
 
-# The Source Dataset:
+# The Source Dataset
 The source data is a spreadsheet containing maintenance work orders associated with Customer Service Requests. [View the data dictionary](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/Data%20Dictionary%20-%20Work%20Order%20Management%20Module%20Dataset.pdf) below see a more detailed description of the dataset.
 ![Data Dictionary - Work Order Management Module Dataset](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/bin/Data%20Dictionary%20-%20Work%20Order%20Management%20Module%20Dataset.jpg)
 
