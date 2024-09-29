@@ -94,6 +94,17 @@ Considering this will be a 'heavy write' data pipeline, with frequent updates to
 ![Data Dictionary - WorkOrderModule DB2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/bin/Data%20Dictionary%20-%20WorkOrderModule%20DB_2.jpg)
 ![Data Dictionary - WorkOrderModule DB3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/bin/Data%20Dictionary%20-%20WorkOrderModule%20DB_3.jpg)
 
+# Extracting the Data
 
 
+# Transforming the Data
 
+## Cleaning the data
+In this step, we will deal with out-of-range data (especially for time values), impose Data type constraints, find and remove duplicate values, and finally edit and transform text data.
+
+### Enforce Datatype constraints
+
+
+We have removed 10,030 Duplicate Records
+
+# Loading the Data
