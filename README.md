@@ -95,16 +95,37 @@ View a snippet of the data dictionary below to see a more detailed description o
 
 
 # Extracting the Data
-
+- Connecting to Google Cloud Storage API and converting data to Dataframe
 
 # Transforming the Data
+The Source data contains 206,058 Rows and 7 Columns. We will use Mage transformer to ...
+![cleaning_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cleaning_1.png)
 
 ## Cleaning the data
-In this step, we will deal with out-of-range data (especially for time values), impose Data type constraints, find and remove duplicate values, and finally edit and transform text data.
+In this step, we will deal with out-of-range data (especially for time values), impose Data type constraints, find and remove duplicate values.
 
-### Enforce Datatype constraints
+Here are a few things we need to do in the data cleaning step:
+- Remove the last column called 'TIME_STAMP' as it only shows the date that the data was exported from the Client's ERP to excel which is not relevant for our project.
+- Capture 'out of range' dates in Datetime Columns and export to repository for record keeping.
+- Converting the out of range values to 'NA' values.
+- Enforce data type constraints for each column.
+- Enforce data type 'length' constraints for each column.
+- Remove duplicate data.
+
+### Removing columns excluded from analysis
 
 
+### Dealing with 'Out of Range' Datetime values
+
+
+### Enforcing Datatypes
+
+Convieniently enough, the first two columns have already been formatted as integer type columns in the Pandas Dataframe. T
+
+### Enforcing Datatype length constraints
+
+
+### Removing Duplicate Records
 We have removed 10,030 Duplicate Records
 
 # Loading the Data
