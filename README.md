@@ -104,7 +104,7 @@ Viewing the [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/
 ![source_dataset_info_head](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/source_dataset_info_head.png)
 
 ## Cleaning the data
-In this step, we will deal with out-of-range data (especially for time values), impose Data type constraints, find and remove duplicate values.
+In this step, we will deal with out-of-range data (specifically for time values), impose Data type constraints, find and remove duplicate values.
 
 Here are a few things we need to do in the data cleaning step:
 - Remove the last column called 'TIME_STAMP' as it only shows the date that the data was exported from the Client's ERP to excel which is not relevant for our project.
