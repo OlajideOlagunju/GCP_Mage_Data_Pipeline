@@ -101,6 +101,7 @@ View a snippet of the data dictionary below to see a more detailed description o
 Viewing the [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv) seen below, it contains 206,058 Rows and 7 Columns. We will use the Mage transformer to first clean the data, then to also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is vital in data transformation tasks such as filtering, aggregating, and cleansing. It ensures that data is standardized and prepared for downstream analysis.
 
 ![source_dataset_info](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/source_dataset_info.png)
+
 ![source_dataset_info_head](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/source_dataset_info_head.png)
 
 ## Cleaning the data
