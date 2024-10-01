@@ -98,7 +98,8 @@ View a snippet of the data dictionary below to see a more detailed description o
 - Connecting to Google Cloud Storage API and converting data to Dataframe
 
 # Transforming the Data
-The Source data contains 206,058 Rows and 7 Columns. We will use Mage transformer to ...
+The [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cleaning_1.png) contains 206,058 Rows and 7 Columns. We will use Mage transformer to first clean the data then create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is vital in data transformation tasks such as filtering, aggregating, and cleansing. It ensures that data is standardized and prepared for downstream analysis.
+
 ![cleaning_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cleaning_1.png)
 
 ## Cleaning the data
@@ -127,5 +128,8 @@ Convieniently enough, the first two columns have already been formatted as integ
 
 ### Removing Duplicate Records
 We have removed 10,030 Duplicate Records
+
+## Creating Fact and Dimension Tables
+
 
 # Loading the Data
