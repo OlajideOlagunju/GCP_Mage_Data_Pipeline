@@ -82,6 +82,9 @@ The source data is a spreadsheet containing maintenance work orders associated w
 
 ![Data Dictionary - Work Order Management Module Dataset](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/bin/Data%20Dictionary%20-%20Work%20Order%20Management%20Module%20Dataset.jpg)
 
+<a href="url"><img src="https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/bin/Data%20Dictionary%20-%20Work%20Order%20Management%20Module%20Dataset.jpg" align="center" width="400" ></a>
+
+
 
 
 # Database Schema
