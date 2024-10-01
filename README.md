@@ -55,7 +55,7 @@ Data Visualization: [Google Looker Studio](https://lookerstudio.google.com/) ![G
 
 
 # High Level Architecture
-![GCP Mage ETL Architecture](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/2.%20Solution%20Architecture/GCP%20Mage%20ETL%20Architecture.png)
+![GCP Mage ETL Architecture](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/2.%20Solution%20Architecture/GCP%20Mage%20ETL%20High%20Level%20Architecture.png)
 
 [//]: # (Explain Architecture Choices for Tools here)
 
