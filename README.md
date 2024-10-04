@@ -94,8 +94,40 @@ View a snippet of the data dictionary below to see a more detailed description o
 ![Data Dictionary - WorkOrderModule DB1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/bin/Data%20Dictionary%20-%20WorkOrderModule%20DB_1.jpg)
 
 
+# GCP Configuration
+## Setting up Google Cloud Storage
+On Cloud Storage, we'll configure a 'region' bucket for the storage. It has the lowest data storage cost and it includes optimized latency / bandwidth, suitable for an analytics pipeline. Some other advantages of the 'region' bucket includes:
+
+Availability
+- Activates data redundancy across availability zones (synchronous).
+- RTO (recovery time objective) of zero (0). In addition, automated failover and failback on zonal failure (no need to change storage paths).
+
+Performance
+- 200 Gbps (per region, per project).
+- Scalable to many Tbps by requesting higher bandwidth quota.
+
+Ensure to disable 'Public access prevention' for this bucket, so that requests to this bucket and corresponding objects are authorized for Mage.
+![cloud_storage_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_1.png)
+
+On this bucket, we will store the Work Order spreadsheet for later retrieval and analysis. Ensure to change bucket access control permissions to 'fine grained', then edit the object's (Work order spreadsheet) access controls to include a 'Public' entity and assign read rights.
+![cloud_storage_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_2.png)
+
+
+## Setting up Google Compute Engine
+
+
+
+## Setting up Mage via Docker
+
+
+
+## Setting up Google Cloud SQL
+
+
+
 # Extracting the Data
 - Connecting to Google Cloud Storage API and converting data to Dataframe
+
 
 # Transforming the Data
 Viewing the [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv) seen below, it contains 206,058 Rows and 7 Columns. We will use the Mage transformer to first clean the data, then to also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is vital in data transformation tasks such as filtering, aggregating, and cleansing. It ensures that data is standardized and prepared for downstream analysis.
@@ -141,3 +173,13 @@ We have removed 10,030 Duplicate Records
 
 
 # Loading the Data
+
+
+
+# More GCP Configuration
+
+## Setting up Google BigQuery
+
+
+
+## Setting up Google Looker Studio
