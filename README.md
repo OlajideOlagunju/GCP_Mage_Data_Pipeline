@@ -106,11 +106,15 @@ Performance
 - 200 Gbps (per region, per project).
 - Scalable to many Tbps by requesting higher bandwidth quota.
 
-Ensure to disable 'Public access prevention' for this bucket, so that requests to this bucket and corresponding objects are authorized for Mage.
+Ensure to disable / deselect 'Public access prevention' for this bucket, so that requests to this bucket and corresponding objects are authorized for Mage.
+
 ![cloud_storage_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_1.png)
 
 On this bucket, we will store the Work Order spreadsheet for later retrieval and analysis. Ensure to change bucket access control permissions to 'fine grained', then edit the object's (Work order spreadsheet) access controls to include a 'Public' entity and assign read rights.
+
 ![cloud_storage_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_2.png)
+
+![cloud_storage_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_3.png)
 
 
 ## Setting up Google Compute Engine
