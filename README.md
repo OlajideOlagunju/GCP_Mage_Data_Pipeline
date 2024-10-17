@@ -6,8 +6,8 @@ An end-to-end solution to process and analyze Maintenance Work Orders using Mage
 The client needs a solution to automatically ingest their maintenance work orders data from their existing spreadsheets and effectively visualize them for reporting. The key metric they are looking to visualize is the resolution rate of work orders based on the activity carried out over time.
 
 
-# Functional & Non-Functional Requirements
-| Functional  | Non-Functional |
+# Technical Requirements
+| Functional 🟢 | Non-Functional 🔵|
 | ------------- | ------------- |
 | The system shall automatically ingest maintenance work orders from Excel spreadsheets stored in Cloud Storage daily.  | The system shall be scalable to handle an increasing number of work orders (up to 1 million records) without significant degradation in performance.  |
 | The system shall provide a mechanism to validate the correctness and completeness of the ingested data (e.g., correct formatting, missing fields).  | The system shall support future integration with other cloud services (e.g., additional data sources or external APIs) without requiring major re-architecture.  |
