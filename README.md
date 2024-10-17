@@ -8,28 +8,18 @@ The client needs a solution to automatically ingest their maintenance work order
 
 # Functional Requirements
 🟢 FR1: The system shall automatically ingest maintenance work orders from Excel spreadsheets stored in Cloud Storage daily.
-
 🟢 FR2: The system shall provide a mechanism to validate the correctness and completeness of the ingested data (e.g., correct formatting, missing fields).
-
 🟢 FR3: The system shall clean, transform the ingested work orders data, and store in Database, maintaining historical records of all work orders.
-
 🟢 FR4: The system shall calculate and visualize metrics such as the "Resolution Rate" of work orders using exportable and dynamic dashboards.
-
 🟢 FR5: The system shall notify users of ingestion failures or transformation errors via email or system alerts.
-
 🟢 FR6: The system shall trigger alerts for work orders that are overdue based on predefined thresholds.
 
 # Non-Functional Requirements
 🔵 NFR1: The system shall be scalable to handle an increasing number of work orders (up to 1 million records) without significant degradation in performance.
-
 🔵 NFR2: The system shall support future integration with other cloud services (e.g., additional data sources or external APIs) without requiring major re-architecture.
-
 🔵 NFR3: Access to sensitive data (e.g., work order details, analytics dashboards) shall be role-based, with authentication and authorization mechanisms in place.
-
 🔵 NFR4: The system shall have an availability of 99.9% to ensure data processing and reporting is available at all times for the client's maintenance team.
-
 🔵 NFR5: Backup and recovery processes shall be in place to restore data in case of accidental deletion or system failure.
-
 🔵 NFR6: The system’s codebase and infrastructure shall be documented to allow easy handover to new developers or administrators.
 
 # Tools Used
