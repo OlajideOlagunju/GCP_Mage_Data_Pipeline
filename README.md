@@ -81,7 +81,11 @@ View a snippet of the data dictionary below to see a more detailed description o
 
 # GCP Configuration
 ## Setting up Google Cloud Storage
-On Cloud Storage, we'll configure a 'region' bucket for the storage. It has the lowest data storage cost and it includes optimized latency / bandwidth, suitable for an analytics pipeline. Some other advantages of the 'region' bucket includes:
+On Cloud Storage, we'll configure a 'region' bucket for the storage as seen below. 
+
+![cloud_storage_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_1.png)
+
+It has the lowest data storage cost and it includes optimized latency / bandwidth, suitable for an analytics pipeline. Some other advantages of the 'region' bucket includes:
 
 Availability
 - Activates data redundancy across availability zones (synchronous).
@@ -93,8 +97,16 @@ Performance
 
 On this bucket, we will store the Work Order spreadsheet for later retrieval and analysis. 
 
-### Configure Permissions
+### Configure Access and Permissions
 
+In the process of creating the bucket, select 'Enforce public access prevention on this bucket' to prevent exposure of the data in the bucket to the internet, and also select 'Uniform' access control.
+
+![cloud_storage_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_2.png)
+
+![cloud_storage_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_2.png)
+
+
+Under IAM & Admin, we'll create a service account
 
 
 
