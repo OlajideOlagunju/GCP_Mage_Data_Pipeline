@@ -103,10 +103,13 @@ In the process of creating the bucket, select 'Enforce public access prevention 
 
 ![cloud_storage_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_2.png)
 
-![cloud_storage_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_2.png)
+![cloud_storage_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_3.png)
 
 
-Under IAM & Admin, we'll create a service account
+Next, we'll need to create a private key to give access to our Mage AI Instance later. Under 'IAM & Admin' on the left bar, select 'Service Accounts'. A default service account is usually provided for your bucket instance, but if not, create a new service account. Ensure to configure the required permissions for the specific principals (users, groups, domains, or service accounts - if many) including roles and IAM conditions where applicable.
+
+We will then create a new private key for the service account. Click on 'Add Key' then 'Create new key' and afterwards select the 'JSON' key type. The private key details will be automatically downloaded to your computer.
+
 
 
 
