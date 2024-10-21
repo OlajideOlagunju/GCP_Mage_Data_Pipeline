@@ -70,7 +70,7 @@ The source data is a spreadsheet containing maintenance work orders associated w
 
 
 # Database Schema
-Considering this will be a 'heavy write' data pipeline, with frequent updates to the database, and a low number of users (analysts, management users) querying results, we'll use a normalized snowflake schema design for this project. This is in contrast to a denormalized schema model, ensuring data integrity during frequent transactional operations. It will help maintain accuracy and consistency in the work order records. From the dataset, the 'TIME_STAMP' column is not included in the analysis as it only shows the date that the data was exported from the Client's ERP to excel which is not relevant for our project.
+Considering this will be a 'heavy write' data pipeline, with frequent updates to the database, and a low number of users (analysts, management users) querying results, I'll use a normalized snowflake schema design for this project. This is in contrast to a denormalized schema model, ensuring data integrity during frequent transactional operations. It will help maintain accuracy and consistency in the work order records. From the dataset, the 'TIME_STAMP' column is not included in the analysis as it only shows the date that the data was exported from the Client's ERP to excel which is not relevant for our project.
 
 ![Schema - WorkOrderModule DB](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/4.%20Database%20Schema/Schema%20-%20WorkOrderModule%20DB.png)
 
@@ -81,7 +81,7 @@ View a snippet of the data dictionary below to see a more detailed description o
 
 # GCP Configuration
 ## Setting up Google Cloud Storage
-On Cloud Storage, we'll configure a 'region' bucket for the storage as seen below. 
+On Cloud Storage, I'll configure a 'region' bucket for the storage as seen below. 
 
 ![cloud_storage_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_1.png)
 
@@ -95,29 +95,74 @@ Performance
 - 200 Gbps (per region, per project).
 - Scalable to many Tbps by requesting higher bandwidth quota.
 
-On this bucket, we will store the Work Order spreadsheet for later retrieval and analysis. 
+On this bucket, I'll store the Work Order spreadsheet for later retrieval and analysis. 
 
 ### Configure Access and Permissions
-
-In the process of creating the bucket, select 'Enforce public access prevention on this bucket' to prevent exposure of the data in the bucket to the internet, and also select 'Uniform' access control.
+In the process of creating the bucket, I'll select 'Enforce public access prevention on this bucket' to prevent exposure of the data in the bucket to the internet, and also select 'Uniform' access control.
 
 ![cloud_storage_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_2.png)
 
 ![cloud_storage_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_3.png)
 
 
-Next, we'll need to create a private key to give access to our Mage AI Instance later. Under 'IAM & Admin' on the left bar, select 'Service Accounts'. A default service account is usually provided for your bucket instance, but if not, create a new service account. Ensure to configure the required permissions for the specific principals (users, groups, domains, or service accounts - if many) including roles and IAM conditions where applicable.
+Next, I'll need to create a private key to give access to the Mage AI Instance later. Under 'IAM & Admin' on the left bar, I will select 'Service Accounts'. A default service account is usually provided for bucket instances, but if not for you, just create a new service account. Ensure to configure the required permissions for the specific principals (users, groups, domains, or service accounts - if many) including roles and IAM conditions where applicable.
 
-We will then create a new private key for the service account. Click on 'Add Key' then 'Create new key' and afterwards select the 'JSON' key type. The private key details will be automatically downloaded to your computer.
+I'll then create a new private key for the service account. Click on 'Add Key' then 'Create new key' and afterwards select the 'JSON' key type. The private key details will be automatically downloaded to the computer.
 
+![cloud_storage_4](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_4.png)
 
+### Uploading the Source Data to the Bucket
+I can upload the source data to the bucket by opening the bucket and clicking on 'Upload' as seen below:
+
+![cloud_storage_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_5.png)
 
 
 ## Setting up Google Compute Engine
+Next up, I'll go to Compute Engine and create a new VM instance. I have selected an 'E2' series with 4 cores and 8GB of memory; the operating system (OS) is Debian GNU/Linux 12 (bookworm). I am also using a 'Spot' VM provisioning model instead of the 'Standard' model. Based on my workload and requirements, this configuration is suitable, however, create your own server based on your own design, planning, and technical requirements.
 
+![compute_engine_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_1.png)
+
+![compute_engine_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_2.png)
+
+Spot VMs have significant discounts, but by design, Compute Engine might preemptively stop or delete (preempt) Spot VMs to reclaim the capacity at any time. Since the workload is currently fault-tolerant and can withstand possible instance preemptions, the Spot VM is a reasonable choice which will help reduce the Compute Engine costs significantly. 
+
+When the workload is significantly increased in the future, and the workloads/pipeline are reconfigured to be in a Streaming mode, then I can re-provision a 'Standard' VM. Finally, because all incoming traffic from outside networks are blocked by default for VM instances, I will select the relevant boxes to allow HTTP/HTTPS traffic.
+
+![compute_engine_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_3.png)
 
 
 ## Setting up Mage via Docker
+I'll now open the VM via the 'SSH' button and install Git, Docker Engine / Docker Compose and Mage on the VM. 
+
+![compute_engine_4](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_4.png)
+
+
+- Install Git following the instructions from this link: [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). 
+- Install the Docker Engine using the instructions from this link: [Docker Engine](https://docs.docker.com/engine/install/debian/#install-using-the-repository) (for my VM, I used the apt repository to install the Docker Engine).
+- Install the Docker Compose plugin following the instructions from this link: [Docker Compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository).
+
+Next, I'll spin up the mage server using 'docker compose up' as seen below. Use the instructions from this link to assist you: [Mage Quickstart](https://docs.mage.ai/getting-started/setup#docker-compose-template).
+
+    git clone https://github.com/mage-ai/compose-quickstart.git mage-quickstart \
+    && cd mage-quickstart \
+    && cp dev.env .env && rm dev.env \
+    && docker compose up
+
+If you get a permission denied error when spinning up the container instance, then try running the below code:
+
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+    newgrp docker
+
+Now check to see if the access is still denied by verifying that the code below works:
+
+    docker run hello-world
+
+If there's still an error, try reading this thread for tips: [Stack Overflow Thread](https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue).
+
+
+
+
 
 
 
