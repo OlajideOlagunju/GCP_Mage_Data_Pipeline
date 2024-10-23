@@ -30,7 +30,7 @@ Containerization: [Docker](https://www.docker.com/) ![Docker](https://github.com
 
 Storage: [Google Cloud Storage](https://cloud.google.com/storage) ![Google Cloud Storage](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/7.%20Icons/Google%20Cloud%20Storage.png)
 
-Database: [Google Cloud SQL](https://cloud.google.com/sql) ![Google Cloud SQL](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/7.%20Icons/Google%20Cloud%20SQL.png) 
+Database: [MariaDB](https://mariadb.org/) ![MariaDB](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/7.%20Icons/MariaDB.png) 
 
 Data Warehouse: [Google BigQuery](https://cloud.google.com/bigquery/) ![Google BigQuery](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/7.%20Icons/BigQuery.png)
 
