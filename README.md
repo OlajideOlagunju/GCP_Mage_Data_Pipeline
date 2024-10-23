@@ -1,5 +1,5 @@
 # Resolution Rate for Work Orders | Google Cloud & Mage Pipeline
-An end-to-end data pipleline solution to process and analyze Maintenance Work Orders using Mage, Google BigQuery, Cloud SQL, and Looker Studio. This prject features integration of cloud tools for scalable data storage, transformation, and visualization based on Client requirements.
+An end-to-end data pipleline solution to process and analyze Maintenance Work Orders using Mage, Google BigQuery, MariaDB, and Looker Studio. This prject features integration of cloud tools for scalable data storage, transformation, and visualization based on Client requirements.
 
 
 # Business Case
@@ -54,7 +54,7 @@ Mage will run via docker inside the Google Compute Engine Instance and will do t
 
 Google Compute Engine was selected as the compute tool as it provides scalable, high-performance VMs (virtual machines), integrates with other Google Cloud services (such as Cloud Storage and BigQuery) and enables efficient data processing. 
 
-MariaDB is used as the database (db) of choice running inside of Docker. The data is loaded to the MariaDB database then connected downstream to BigQuery. Although the current source data is ingested and processed in a batch mode, the near future client consideration for this solution is to directly write the transactional data from the ERP to the database in real time. Hence, the incorporation of MariaDB in this pipeline.
+MariaDB is used as the database (db) of choice running inside of Docker. It is an open-source, improved version of MySQL which offers faster performance, broader feature set, and active community development. The data is loaded to the MariaDB database then connected downstream to BigQuery. Although the current source data is ingested and processed in a batch mode, the near future client consideration for this solution is to directly write the transactional data from the ERP to the database in real time. Hence, the incorporation of MariaDB in this pipeline.
 
 BigQuery is used as the data warehousing tool as it is ideal for handling large-scale analytics queries and is already being used by the client’s firm as their primary data warehouse. It can also handle enormous amounts of data with near-instant query response time, using its distributed architecture.
 
