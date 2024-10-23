@@ -54,7 +54,7 @@ Mage will run via docker inside the Google Compute Engine Instance and will do t
 
 Google Compute Engine was selected as the compute tool as it provides scalable, high-performance VMs (virtual machines), integrates with other Google Cloud services (such as Cloud Storage and BigQuery) and enables efficient data processing. 
 
-Google Cloud SQL is used as the database (db) of choice with a MySQL configuration. The data is loaded to the Google Cloud SQL database then connected downstream to BigQuery. Although the current source data is ingested and processed in a batch mode, the near future client consideration for this solution is to directly write the transactional data from the ERP to the Cloud SQL db in real time. Hence, the incorporation of Cloud SQL in this pipeline.
+MariaDB is used as the database (db) of choice running inside of Docker. The data is loaded to the MariaDB database then connected downstream to BigQuery. Although the current source data is ingested and processed in a batch mode, the near future client consideration for this solution is to directly write the transactional data from the ERP to the database in real time. Hence, the incorporation of MariaDB in this pipeline.
 
 BigQuery is used as the data warehousing tool as it is ideal for handling large-scale analytics queries and is already being used by the client’s firm as their primary data warehouse. It can also handle enormous amounts of data with near-instant query response time, using its distributed architecture.
 
