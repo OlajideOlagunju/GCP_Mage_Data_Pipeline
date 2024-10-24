@@ -132,19 +132,19 @@ When the workload is significantly increased in the future, and the workloads/pi
 
 
 ## Setting up Mage via Docker
-I'll now open the VM via the 'SSH' button and install Git, Docker Engine / Docker Compose and Mage on the VM. 
+I'll now open the VM via the 'SSH' button and install Git and Docker Engine / Docker Compose. 
 
 ![compute_engine_4](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_4.png)
 
-
+When you get in the bash terminal:
 - Install Git following the instructions from this link: [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). 
 - Install the Docker Engine using the instructions from this link: [Docker Engine](https://docs.docker.com/engine/install/debian/#install-using-the-repository) (for my VM, I used the apt repository to install the Docker Engine).
 - Install the Docker Compose plugin following the instructions from this link: [Docker Compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository).
 
-Next, I'll spin up the mage server using 'docker compose up' as seen below. Use the instructions from this link to assist you: [Mage Quickstart](https://docs.mage.ai/getting-started/setup#docker-compose-template).
+Next, I'll spin up a container (we'll be running Mage and MariaDB from this container) using 'docker compose up' from a custom github private repository I made in my account. You can fork the repository link [here](https://github.com/mage-ai/compose-quickstart) and then edit the code below with details pertinent to your github account and repository.
 
-    git clone https://github.com/mage-ai/compose-quickstart.git mage-quickstart \
-    && cd mage-quickstart \
+    git clone https://<your github access token goes here>@github.com/OlajideOlagunju/mage_docker_compose.git gcp_mage_pipeline \
+    && cd gcp_mage_pipeline \
     && cp dev.env .env && rm dev.env \
     && docker compose up
 
@@ -160,13 +160,44 @@ Now check to see if the access is still denied by verifying that the code below 
 
 If there's still an error, try reading this thread for tips: [Stack Overflow Thread](https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue).
 
+Mage and MariaDB should run on the External IP address of your VM plus the respective ports specified. 
+
+Let's see a snippet of the docker-compose.yml file that spins up the Mage instance and MariaDB database:
+
+    services:
+        mage:
+            image: mageai/mageai:latest
+            command: mage start ${PROJECT_NAME}
+            env_file:
+                - .env
+            build:
+                context: .
+                dockerfile: Dockerfile
+            environment:
+                USER_CODE_PATH: /home/src/${PROJECT_NAME}
+                ENV: ${ENV}
+            ports:
+                - 6789:6789
+            volumes:
+                - .:/home/src/
+            restart: on-failure:5
+
+        mariadb:
+            image: mariadb
+            environment:
+                MYSQL_ROOT_PASSWORD: cloudgeekdb*123
+                MYSQL_USER: cloudgeek
+                MYSQL_PASSWORD: cloudgeek*123
+                MYSQL_DATABASE: WorkOrderModule
+            ports:
+                - "3306:3306"
+            volumes:
+                - "./WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql"
+                - mariadb_data:/var/lib/mysql
 
 
 
-
-
-
-## Setting up Google Cloud SQL
+## Setting up MariaDB
 
 
 
