@@ -160,7 +160,9 @@ Now check to see if the access is still denied by verifying that the code below 
 
 If there's still an error, try reading this thread for tips: [Stack Overflow Thread](https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue).
 
-Mage and MariaDB should run on the External IP address of your VM plus the respective ports specified. 
+Mage and MariaDB should run on the External IP address of your VM plus the respective ports specified.
+
+For example, mage should run on "XX.XX.XX.XXX:6789" and Maria DB can be logged into via the server host IP of XX.XX.XX.XXX and port of 3306.
 
 Let's see a snippet of the docker-compose.yml file that spins up the Mage instance and MariaDB database:
 
@@ -177,7 +179,7 @@ Let's see a snippet of the docker-compose.yml file that spins up the Mage instan
                 USER_CODE_PATH: /home/src/${PROJECT_NAME}
                 ENV: ${ENV}
             ports:
-                - 6789:6789
+                - "6789:6789"
             volumes:
                 - .:/home/src/
             restart: on-failure:5
@@ -185,16 +187,15 @@ Let's see a snippet of the docker-compose.yml file that spins up the Mage instan
         mariadb:
             image: mariadb
             environment:
-                MYSQL_ROOT_PASSWORD: cloudgeekdb*123
-                MYSQL_USER: cloudgeek
-                MYSQL_PASSWORD: cloudgeek*123
+                MYSQL_ROOT_PASSWORD: <insert your root password>
+                MYSQL_USER: <insert your preferred username>
+                MYSQL_PASSWORD: <insert your user password>
                 MYSQL_DATABASE: WorkOrderModule
             ports:
                 - "3306:3306"
             volumes:
                 - "./WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql"
                 - mariadb_data:/var/lib/mysql
-
 
 
 ## Setting up MariaDB
