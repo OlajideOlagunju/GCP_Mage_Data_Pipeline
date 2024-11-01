@@ -1,5 +1,24 @@
-﻿-- Exported from QuickDBD: https://www.quickdatabasediagrams.com/
+﻿-- MariaDB script
+-- Exported from QuickDBD: https://www.quickdatabasediagrams.com/
 
+-- Drop the database if it exists
+DROP DATABASE IF EXISTS WorkOrderModule;
+
+-- Create the database
+CREATE DATABASE WorkOrderModule;
+
+-- Use the database
+USE WorkOrderModule;
+
+-- Drop Tables
+DROP TABLE IF EXISTS work_order_fact;
+DROP TABLE IF EXISTS wo_activity_;
+DROP TABLE IF EXISTS service_request_;
+DROP TABLE IF EXISTS work_order_time_;
+DROP TABLE IF EXISTS wo_time_type_;
+DROP TABLE IF EXISTS day_of_week_;
+
+-- Create Tables
 CREATE TABLE `work_order_fact` (
     -- Surrogate Key
     `WorkOrder_ID` int  NOT NULL ,
