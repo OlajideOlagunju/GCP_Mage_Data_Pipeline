@@ -179,24 +179,27 @@ Let's see a snippet of the docker-compose.yml file that spins up the Mage instan
                 USER_CODE_PATH: /home/src/${PROJECT_NAME}
                 ENV: ${ENV}
             ports:
-                - "6789:6789"
+                - 6789:6789
             volumes:
                 - .:/home/src/
             restart: on-failure:5
 
-        mariadb:
-            image: mariadb
-            environment:
-                MYSQL_ROOT_PASSWORD: <insert your root password>
-                MYSQL_USER: <insert your preferred username>
-                MYSQL_PASSWORD: <insert your user password>
-                MYSQL_DATABASE: WorkOrderModule
-            ports:
-                - "3306:3306"
-            volumes:
-                - "./WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql"
-                - mariadb_data:/var/lib/mysql
-
+    mariadb:
+        image: mariadb
+        environment:
+            MYSQL_ROOT_PASSWORD: <insert your root password>
+            MYSQL_USER: <insert your preferred username>
+            MYSQL_PASSWORD: <insert your user password>
+            MYSQL_DATABASE: WorkOrderModule
+        ports:
+            - 3306:3306
+        volumes:
+            # create a persistent docker volume
+            - ./data:/var/lib/mysql
+            # mount configuration
+            - ./config/:/etc/mysql/conf.d
+            # initialize tables using script
+            - ./WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql
 
 ## Setting up MariaDB
 

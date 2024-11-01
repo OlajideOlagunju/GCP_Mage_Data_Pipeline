@@ -1,7 +1,4 @@
 ﻿-- Exported from QuickDBD: https://www.quickdatabasediagrams.com/
--- Link to schema: https://app.quickdatabasediagrams.com/#/d/fsK4wT
--- NOTE! If you have used non-SQL datatypes in your design, you will have to change these here.
-
 
 CREATE TABLE `work_order_fact` (
     -- Surrogate Key
@@ -42,6 +39,8 @@ CREATE TABLE `service_request_` (
 );
 
 CREATE TABLE `work_order_time_` (
+    -- Foreign Key for 'work_order_fact' Table
+    `WorkOrder_ID` int  NOT NULL ,
     -- Surrogate Key
     `Time_ID` int  NOT NULL ,
     -- Foreign Key for 'wo_time_type_' Table
@@ -93,6 +92,9 @@ REFERENCES `service_request_` (`ServiceRequest_ID`);
 
 ALTER TABLE `work_order_fact` ADD CONSTRAINT `fk_work_order_fact_TimeID` FOREIGN KEY(`TimeID`)
 REFERENCES `work_order_time_` (`Time_ID`);
+
+ALTER TABLE `work_order_time_` ADD CONSTRAINT `fk_work_order_time__WorkOrder_ID` FOREIGN KEY(`WorkOrder_ID`)
+REFERENCES `work_order_fact` (`WorkOrder_ID`);
 
 ALTER TABLE `work_order_time_` ADD CONSTRAINT `fk_work_order_time__TimeType_ID` FOREIGN KEY(`TimeType_ID`)
 REFERENCES `wo_time_type_` (`TimeType_ID`);
