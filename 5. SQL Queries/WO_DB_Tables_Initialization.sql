@@ -14,20 +14,24 @@ USE WorkOrderModule;
 DROP TABLE IF EXISTS work_order_fact;
 DROP TABLE IF EXISTS wo_activity_;
 DROP TABLE IF EXISTS service_request_;
-DROP TABLE IF EXISTS work_order_time_;
-DROP TABLE IF EXISTS wo_time_type_;
-DROP TABLE IF EXISTS day_of_week_;
+DROP TABLE IF EXISTS started_;
+DROP TABLE IF EXISTS completed_;
+DROP TABLE IF EXISTS added_;
 
 -- Create Tables
 CREATE TABLE `work_order_fact` (
     -- Surrogate Key
     `WorkOrder_ID` int  NOT NULL ,
     -- Foreign Key for 'wo_activity_' Table
-    `Activity_ID` int  NOT NULL ,
+    `Activity_ID` int  NULL ,
     -- Foreign Key for 'service_request_' Table
     `ServiceRequest_ID` int  NULL ,
-    -- Foreign Key for 'work_order_time_' Table
-    `TimeID` int  NOT NULL ,
+    -- Foreign Key for 'started_' Table
+    `Started_ID` int  NULL ,
+    -- Foreign Key for 'completed_' Table
+    `Completed_ID` int  NULL ,
+    -- Foreign Key for 'added_' Table
+    `Added_ID` int  NULL ,
     -- Work Order Unique Number
     `WorkOrderNumber` int  NOT NULL ,
     PRIMARY KEY (
@@ -49,57 +53,77 @@ CREATE TABLE `wo_activity_` (
 
 CREATE TABLE `service_request_` (
     -- Surrogate Key
-    `ServiceRequest_ID` int  NULL ,
+    `ServiceRequest_ID` int  NOT NULL ,
     -- Service Request number where applicable
-    `ServiceRequestNumber` int  NULL ,
+    `ServiceRequestNumber` int  NOT NULL ,
     PRIMARY KEY (
         `ServiceRequest_ID`
     )
 );
 
-CREATE TABLE `work_order_time_` (
-    -- Foreign Key for 'work_order_fact' Table
-    `WorkOrder_ID` int  NOT NULL ,
+CREATE TABLE `started_` (
     -- Surrogate Key
-    `Time_ID` int  NOT NULL ,
-    -- Foreign Key for 'wo_time_type_' Table
-    `TimeType_ID` int  NOT NULL ,
-    -- Foreign Key for 'day_of_week_' Table
-    `Day_of_week_ID` int  NOT NULL ,
+    `Started_ID` int  NOT NULL ,
     -- The Year
     `Year` int  NOT NULL ,
+    -- The Quarter with 1st quarter = 1, ... 4th quarter = 4
+    `Quarter` int  NOT NULL ,
     -- The Month
     `Month` int  NOT NULL ,
+    -- The day of the week with Monday=0, Sunday=6.
+    `Day_of_Week` int  NOT NULL ,
     -- The Day
     `Day` int  NOT NULL ,
     -- The Hour
     `Hour` int  NOT NULL ,
     -- The Minute
     `Minute` int  NOT NULL ,
-    -- The Second
-    `Second` int  NOT NULL ,
     PRIMARY KEY (
-        `Time_ID`
+        `Started_ID`
     )
 );
 
-CREATE TABLE `wo_time_type_` (
+CREATE TABLE `completed_` (
     -- Surrogate Key
-    `TimeType_ID` int  NOT NULL ,
-    -- The time description. i.e. 'Started','Completed', 'Added'
-    `Time_Type` varchar(20)  NOT NULL ,
+    `Completed_ID` int  NOT NULL ,
+    -- The Year
+    `Year` int  NOT NULL ,
+    -- The Quarter with 1st quarter = 1, ... 4th quarter = 4
+    `Quarter` int  NOT NULL ,
+    -- The Month
+    `Month` int  NOT NULL ,
+    -- The day of the week with Monday=0, Sunday=6.
+    `Day_of_Week` int  NOT NULL ,
+    -- The Day
+    `Day` int  NOT NULL ,
+    -- The Hour
+    `Hour` int  NOT NULL ,
+    -- The Minute
+    `Minute` int  NOT NULL ,
     PRIMARY KEY (
-        `TimeType_ID`
+        `Completed_ID`
     )
 );
 
-CREATE TABLE `day_of_week_` (
+CREATE TABLE `added_` (
     -- Surrogate Key
-    `Day_of_week_ID` int  NOT NULL ,
-    -- The day of the week
-    `DayInWeek` varchar(12)  NOT NULL ,
+    `Added_ID` int  NOT NULL ,
+    -- The Year
+    `Year` int  NOT NULL ,
+    -- The Quarter with 1st quarter = 1, ... 4th quarter = 4
+    `Quarter` int  NOT NULL ,
+    -- The Month
+    `Month` int  NOT NULL ,
+    -- The day of the week with Monday=0, Sunday=6.
+    `Day_of_Week` int  NOT NULL ,
+    -- The Day
+    `Day` int  NOT NULL ,
+    -- The Hour
+    `Hour` int  NOT NULL ,
+    -- The Minute
+    `Minute` int  NOT NULL ,
     PRIMARY KEY (
-        `Day_of_week_ID`
+        `Added_ID`
     )
 );
 
@@ -109,15 +133,12 @@ REFERENCES `wo_activity_` (`ActivityID`);
 ALTER TABLE `work_order_fact` ADD CONSTRAINT `fk_work_order_fact_ServiceRequest_ID` FOREIGN KEY(`ServiceRequest_ID`)
 REFERENCES `service_request_` (`ServiceRequest_ID`);
 
-ALTER TABLE `work_order_fact` ADD CONSTRAINT `fk_work_order_fact_TimeID` FOREIGN KEY(`TimeID`)
-REFERENCES `work_order_time_` (`Time_ID`);
+ALTER TABLE `work_order_fact` ADD CONSTRAINT `fk_work_order_fact_Started_ID` FOREIGN KEY(`Started_ID`)
+REFERENCES `started_` (`Started_ID`);
 
-ALTER TABLE `work_order_time_` ADD CONSTRAINT `fk_work_order_time__WorkOrder_ID` FOREIGN KEY(`WorkOrder_ID`)
-REFERENCES `work_order_fact` (`WorkOrder_ID`);
+ALTER TABLE `work_order_fact` ADD CONSTRAINT `fk_work_order_fact_Completed_ID` FOREIGN KEY(`Completed_ID`)
+REFERENCES `completed_` (`Completed_ID`);
 
-ALTER TABLE `work_order_time_` ADD CONSTRAINT `fk_work_order_time__TimeType_ID` FOREIGN KEY(`TimeType_ID`)
-REFERENCES `wo_time_type_` (`TimeType_ID`);
-
-ALTER TABLE `work_order_time_` ADD CONSTRAINT `fk_work_order_time__Day_of_week_ID` FOREIGN KEY(`Day_of_week_ID`)
-REFERENCES `day_of_week_` (`Day_of_week_ID`);
+ALTER TABLE `work_order_fact` ADD CONSTRAINT `fk_work_order_fact_Added_ID` FOREIGN KEY(`Added_ID`)
+REFERENCES `added_` (`Added_ID`);
 
