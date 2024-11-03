@@ -141,12 +141,14 @@ When you get in the bash terminal:
 - Install the Docker Engine using the instructions from this link: [Docker Engine](https://docs.docker.com/engine/install/debian/#install-using-the-repository) (for my VM, I used the apt repository to install the Docker Engine).
 - Install the Docker Compose plugin following the instructions from this link: [Docker Compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository).
 
-Next, I'll spin up a container (we'll be running Mage and MariaDB from this container) using 'docker compose up' from a custom github private repository I made in my account. You can fork the repository link [here](https://github.com/mage-ai/compose-quickstart) and then edit the code below with details pertinent to your github account and repository.
+Next, I'll spin up a container (we'll be running Mage and MariaDB from this container) using 'docker compose up' from a custom github private repository I made in my account. You can fork a sample repository link [here](https://github.com/mage-ai/compose-quickstart) and then edit the code below with details pertinent to your github account and repository. Remember the Cloud storage private key that was downloaded to your computer during the cloud storage setup? Please also add that Private Key file (should be a '.json' file) to the github repository, then proceed to the next step.
 
-    git clone https://<your github access token goes here>@github.com/OlajideOlagunju/mage_docker_compose.git gcp_mage_pipeline \
+    git clone https://<your github access token goes here>@github.com/<github account name>/<repository name>.git gcp_mage_pipeline \
     && cd gcp_mage_pipeline \
     && cp dev.env .env && rm dev.env \
     && docker compose up
+
+Run the above code in the bash terminal.
 
 If you get a permission denied error when spinning up the container instance, then try running the below code:
 
