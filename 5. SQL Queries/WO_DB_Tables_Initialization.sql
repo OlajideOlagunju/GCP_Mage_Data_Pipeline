@@ -23,15 +23,15 @@ CREATE TABLE `work_order_fact` (
     -- Surrogate Key
     `WorkOrder_ID` int  NOT NULL ,
     -- Foreign Key for 'wo_activity_' Table
-    `Activity_ID` int  NULL ,
+    `Activity_ID` int  NOT NULL ,
     -- Foreign Key for 'service_request_' Table
-    `ServiceRequest_ID` int  NULL ,
+    `ServiceRequest_ID` int  NOT NULL ,
     -- Foreign Key for 'started_' Table
-    `Started_ID` int  NULL ,
+    `Started_ID` int  NOT NULL ,
     -- Foreign Key for 'completed_' Table
-    `Completed_ID` int  NULL ,
+    `Completed_ID` int  NOT NULL ,
     -- Foreign Key for 'added_' Table
-    `Added_ID` int  NULL ,
+    `Added_ID` int  NOT NULL ,
     -- Work Order Unique Number
     `WorkOrderNumber` int  NOT NULL ,
     PRIMARY KEY (
@@ -43,7 +43,7 @@ CREATE TABLE `wo_activity_` (
     -- Surrogate Key
     `ActivityID` int  NOT NULL ,
     -- Code for the Work Order Activity
-    `ActivityCode` varchar(12)  NOT NULL ,
+    `ActivityCode` varchar(12)  NULL ,
     -- Description of the Work Order Activity
     `ActivityDescription` varchar(300)  NULL ,
     PRIMARY KEY (
@@ -55,7 +55,7 @@ CREATE TABLE `service_request_` (
     -- Surrogate Key
     `ServiceRequest_ID` int  NOT NULL ,
     -- Service Request number where applicable
-    `ServiceRequestNumber` int  NOT NULL ,
+    `ServiceRequestNumber` int  NULL ,
     PRIMARY KEY (
         `ServiceRequest_ID`
     )
@@ -65,19 +65,19 @@ CREATE TABLE `started_` (
     -- Surrogate Key
     `Started_ID` int  NOT NULL ,
     -- The Year
-    `Year` int  NOT NULL ,
+    `Year` int  NULL ,
     -- The Quarter with 1st quarter = 1, ... 4th quarter = 4
-    `Quarter` int  NOT NULL ,
+    `Quarter` int  NULL ,
     -- The Month
-    `Month` int  NOT NULL ,
+    `Month` int  NULL ,
     -- The day of the week with Monday=0, Sunday=6.
-    `Day_of_Week` int  NOT NULL ,
+    `Day_of_Week` int  NULL ,
     -- The Day
-    `Day` int  NOT NULL ,
+    `Day` int  NULL ,
     -- The Hour
-    `Hour` int  NOT NULL ,
+    `Hour` int  NULL ,
     -- The Minute
-    `Minute` int  NOT NULL ,
+    `Minute` int  NULL ,
     PRIMARY KEY (
         `Started_ID`
     )
@@ -87,19 +87,19 @@ CREATE TABLE `completed_` (
     -- Surrogate Key
     `Completed_ID` int  NOT NULL ,
     -- The Year
-    `Year` int  NOT NULL ,
+    `Year` int  NULL ,
     -- The Quarter with 1st quarter = 1, ... 4th quarter = 4
-    `Quarter` int  NOT NULL ,
+    `Quarter` int  NULL ,
     -- The Month
-    `Month` int  NOT NULL ,
+    `Month` int  NULL ,
     -- The day of the week with Monday=0, Sunday=6.
-    `Day_of_Week` int  NOT NULL ,
+    `Day_of_Week` int  NULL ,
     -- The Day
-    `Day` int  NOT NULL ,
+    `Day` int  NULL ,
     -- The Hour
-    `Hour` int  NOT NULL ,
+    `Hour` int  NULL ,
     -- The Minute
-    `Minute` int  NOT NULL ,
+    `Minute` int  NULL ,
     PRIMARY KEY (
         `Completed_ID`
     )
@@ -109,19 +109,19 @@ CREATE TABLE `added_` (
     -- Surrogate Key
     `Added_ID` int  NOT NULL ,
     -- The Year
-    `Year` int  NOT NULL ,
+    `Year` int  NULL ,
     -- The Quarter with 1st quarter = 1, ... 4th quarter = 4
-    `Quarter` int  NOT NULL ,
+    `Quarter` int  NULL ,
     -- The Month
-    `Month` int  NOT NULL ,
+    `Month` int  NULL ,
     -- The day of the week with Monday=0, Sunday=6.
-    `Day_of_Week` int  NOT NULL ,
+    `Day_of_Week` int  NULL ,
     -- The Day
-    `Day` int  NOT NULL ,
+    `Day` int  NULL ,
     -- The Hour
-    `Hour` int  NOT NULL ,
+    `Hour` int  NULL ,
     -- The Minute
-    `Minute` int  NOT NULL ,
+    `Minute` int  NULL ,
     PRIMARY KEY (
         `Added_ID`
     )
