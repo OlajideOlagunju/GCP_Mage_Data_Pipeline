@@ -118,7 +118,7 @@ I can upload the source data to the bucket by opening the bucket and clicking on
 
 
 ## Setting up Google Compute Engine
-Next up, I'll go to Compute Engine and create a new VM instance. I have selected an 'E2' series with 4 cores and 8GB of memory; the operating system (OS) is Debian GNU/Linux 12 (bookworm). I am also using a 'Spot' VM provisioning model instead of the 'Standard' model. Based on my workload and requirements, this configuration is suitable, however, create your own server based on your own design, planning, and technical requirements.
+Next up, I'll go to Compute Engine and create a new VM instance. I have selected an 'E2' series with the appropriate amount of cores and memory space; the operating system (OS) is Debian GNU/Linux 12 (bookworm). I am also using a 'Spot' VM provisioning model instead of the 'Standard' model. Based on my workload and requirements, I picked a configuration that is suitable, however, create your own server based on your own design, planning, and technical requirements.
 
 ![compute_engine_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_1.png)
 
