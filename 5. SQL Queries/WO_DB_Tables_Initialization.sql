@@ -41,13 +41,13 @@ CREATE TABLE `work_order_fact` (
 
 CREATE TABLE `wo_activity_` (
     -- Surrogate Key
-    `ActivityID` int  NOT NULL ,
+    `Activity_ID` int  NOT NULL ,
     -- Code for the Work Order Activity
     `ActivityCode` varchar(12)  NULL ,
     -- Description of the Work Order Activity
     `ActivityDescription` varchar(300)  NULL ,
     PRIMARY KEY (
-        `ActivityID`
+        `Activity_ID`
     )
 );
 
@@ -128,7 +128,7 @@ CREATE TABLE `added_` (
 );
 
 ALTER TABLE `work_order_fact` ADD CONSTRAINT `fk_work_order_fact_Activity_ID` FOREIGN KEY(`Activity_ID`)
-REFERENCES `wo_activity_` (`ActivityID`);
+REFERENCES `wo_activity_` (`Activity_ID`);
 
 ALTER TABLE `work_order_fact` ADD CONSTRAINT `fk_work_order_fact_ServiceRequest_ID` FOREIGN KEY(`ServiceRequest_ID`)
 REFERENCES `service_request_` (`ServiceRequest_ID`);
