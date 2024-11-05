@@ -15,16 +15,14 @@ def export_data_to_big_query(data, **kwargs) -> None:
     Configuration settings are in 'io_config.yaml' which is in mage server.
 
     Docs: https://docs.mage.ai/design/data-loading#bigquery
-    """
-
+    """   
+    config_path = path.join(get_repo_path(), 'io_config.yaml')
+    config_profile = 'default'
+    
     for key, value in data.items():
         table_id = 'data-pipelines-437522.WorkOrderModule.{}'.format(key)  # Specify the name of the table to export data to
-        config_path = path.join(get_repo_path(), 'io_config.yaml')
-        config_profile = 'default'
-
         BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).export(
             DataFrame(value),
-            auto_clean_name=False,
             table_id,
             if_exists='append',  # Specify resolution policy if table name already exists
         )
