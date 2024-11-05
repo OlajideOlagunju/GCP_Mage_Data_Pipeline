@@ -207,12 +207,12 @@ Let's see a snippet of the docker-compose.yml file that spins up the Mage instan
 
 
 
-# Extracting the Data
+# Extracting the Data in Mage
 - Connecting to Google Cloud Storage API and converting data to Dataframe
 
 
 # Transforming the Data
-Viewing the [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv) seen below, it contains 206,058 Rows and 7 Columns. We will use the Mage transformer to first clean the data, then to also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is vital in data transformation tasks such as filtering, aggregating, and cleansing. It ensures that data is standardized and prepared for downstream analysis.
+Viewing the [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv) seen below, it contains 206,058 Rows and 7 Columns. For the sake of understanding each of the steps in the data transformation which is the 'T' in ETL, we will use a jupyter notebook to replicate the transformation we will eventually do in mage. Loading the dataset in a dataframe shows the information below:
 
 ![source_dataset_info](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/source_dataset_info.png)
 
@@ -253,6 +253,9 @@ We have removed 10,030 Duplicate Records
 
 ## Creating Fact and Dimension Tables
 
+
+## Mage Transformer
+We will use the Mage transformer to essentially replicate all the transformation steps above, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. 
 
 # Loading the Data
 
