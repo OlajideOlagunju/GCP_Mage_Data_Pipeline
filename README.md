@@ -202,6 +202,7 @@ Let's see a snippet of the docker-compose.yml file that spins up the Mage instan
             - ./config/:/etc/mysql/conf.d
             # initialize tables using script
             - ./WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql
+        restart: on-failure:5
 
 ## Setting up MariaDB
 
