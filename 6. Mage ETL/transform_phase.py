@@ -140,48 +140,25 @@ def transform(data, data_2, *args, **kwargs): # data_2 is output from the get_ma
     df = df.merge(activity_df, left_on='WORKORDER_ACTIVITY_CODE', right_on='ActivityCode', how='left')
     df = df.merge(service_request_df, left_on='SVC_REQUEST_NUMBER', right_on='ServiceRequestNumber', how='left')
 
-    # Function to extract time components
-    def extract_time_components(datetime_series):
-        return pd.DataFrame({
-            'Year': datetime_series.dt.year,
-            'Quarter': datetime_series.dt.quarter,
-            'Month': datetime_series.dt.month,
-            'Day_of_Week': datetime_series.dt.dayofweek,
-            'Day': datetime_series.dt.day,
-            'Hour': datetime_series.dt.hour,
-            'Minute': datetime_series.dt.minute
-        })
-
-    # Create time component DataFrames for started, completed, and added times
-    df_started_components = extract_time_components(df['WORKORDER_STARTED'])
-    df_completed_components = extract_time_components(df['WORKORDER_COMPLETED'])
-    df_added_components = extract_time_components(df['WORKORDER_ADDED'])
-
-    # Unique Started, Completed, and Added tables with IDs starting from max IDs in `max_ids`
-    started_df = df_started_components.drop_duplicates().reset_index(drop=True)
+    # Extract unique Started, Completed, and Added datetime data, and generate IDs starting from max IDs in `max_ids`
+    started_df = df[['WORKORDER_STARTED']].drop_duplicates().reset_index(drop=True).rename(
+        columns={'WORKORDER_STARTED': 'Date_time'}
+    )
     started_df['Started_ID'] = range(max_ids['started_'] + 1, max_ids['started_'] + 1 + len(started_df))
 
-    completed_df = df_completed_components.drop_duplicates().reset_index(drop=True)
+    completed_df = df[['WORKORDER_COMPLETED']].drop_duplicates().reset_index(drop=True).rename(
+        columns={'WORKORDER_COMPLETED': 'Date_time'}
+    )
     completed_df['Completed_ID'] = range(max_ids['completed_'] + 1, max_ids['completed_'] + 1 + len(completed_df))
 
-    added_df = df_added_components.drop_duplicates().reset_index(drop=True)
+    added_df = df[['WORKORDER_ADDED']].drop_duplicates().reset_index(drop=True).rename(
+        columns={'WORKORDER_ADDED': 'Date_time'}
+    )
     added_df['Added_ID'] = range(max_ids['added_'] + 1, max_ids['added_'] + 1 + len(added_df))
 
-    # Merge Started, Completed, and Added IDs back to the main DataFrame using time components
-    df = df.merge(
-        df_started_components.merge(started_df, on=['Year', 'Quarter', 'Month', 'Day_of_Week', 'Day', 'Hour', 'Minute'], how='left'),
-        left_index=True, right_index=True, suffixes=('', '_y')
-    ).drop(columns=[col for col in df.columns if '_y' in col])
-
-    df = df.merge(
-        df_completed_components.merge(completed_df, on=['Year', 'Quarter', 'Month', 'Day_of_Week', 'Day', 'Hour', 'Minute'], how='left'),
-        left_index=True, right_index=True, suffixes=('', '_y')
-    ).drop(columns=[col for col in df.columns if '_y' in col])
-
-    df = df.merge(
-        df_added_components.merge(added_df, on=['Year', 'Quarter', 'Month', 'Day_of_Week', 'Day', 'Hour', 'Minute'], how='left'),
-        left_index=True, right_index=True, suffixes=('', '_y')
-    ).drop(columns=[col for col in df.columns if '_y' in col])
+    df = df.merge(started_df, left_on='WORKORDER_STARTED', right_on='Date_time', how='left')
+    df = df.merge(completed_df, left_on='WORKORDER_COMPLETED', right_on='Date_time', how='left')
+    df = df.merge(added_df, left_on='WORKORDER_ADDED', right_on='Date_time', how='left')
 
     # Create the work_order_fact table with unique WorkOrder_IDs
     work_order_fact_df = df[['WorkOrderID', 'Activity_ID', 'ServiceRequest_ID', 'Started_ID', 'Completed_ID', 'Added_ID', 'WORKORDER_NUMBER']].rename(
