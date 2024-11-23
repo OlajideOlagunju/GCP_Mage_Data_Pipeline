@@ -125,13 +125,13 @@ def transform(data, data_2, *args, **kwargs): # data_2 is output from the get_ma
     # Prepare the data transformations
 
     # Extract unique Activity data
-    activity_df = df[['WORKORDER_ACTIVITY_CODE', 'WORKORDER_ACTIVITY_DESCRIPTION']].drop_duplicates().rename(
+    activity_df = df[['WORKORDER_ACTIVITY_CODE', 'WORKORDER_ACTIVITY_DESCRIPTION']].drop_duplicates().dropna().rename(
         columns={'WORKORDER_ACTIVITY_CODE': 'ActivityCode', 'WORKORDER_ACTIVITY_DESCRIPTION': 'ActivityDescription'}
     )
     activity_df['Activity_ID'] = range(max_ids['wo_activity_'] + 1, max_ids['wo_activity_'] + 1 + len(activity_df))
 
     # Extract unique Service Request data
-    service_request_df = df[['SVC_REQUEST_NUMBER']].drop_duplicates().rename(
+    service_request_df = df[['SVC_REQUEST_NUMBER']].drop_duplicates().dropna().rename(
         columns={'SVC_REQUEST_NUMBER': 'ServiceRequestNumber'}
     )
     service_request_df['ServiceRequest_ID'] = range(max_ids['service_request_'] + 1, max_ids['service_request_'] + 1 + len(service_request_df))
@@ -141,17 +141,17 @@ def transform(data, data_2, *args, **kwargs): # data_2 is output from the get_ma
     df = df.merge(service_request_df, left_on='SVC_REQUEST_NUMBER', right_on='ServiceRequestNumber', how='left')
 
     # Extract unique Started, Completed, and Added datetime data, and generate IDs starting from max IDs in `max_ids`
-    started_df = df[['WORKORDER_STARTED']].drop_duplicates().reset_index(drop=True).rename(
+    started_df = df[['WORKORDER_STARTED']].dropna().reset_index(drop=True).rename(
         columns={'WORKORDER_STARTED': 'Date_time'}
     )
     started_df['Started_ID'] = range(max_ids['started_'] + 1, max_ids['started_'] + 1 + len(started_df))
 
-    completed_df = df[['WORKORDER_COMPLETED']].drop_duplicates().reset_index(drop=True).rename(
+    completed_df = df[['WORKORDER_COMPLETED']].dropna().reset_index(drop=True).rename(
         columns={'WORKORDER_COMPLETED': 'Date_time'}
     )
     completed_df['Completed_ID'] = range(max_ids['completed_'] + 1, max_ids['completed_'] + 1 + len(completed_df))
 
-    added_df = df[['WORKORDER_ADDED']].drop_duplicates().reset_index(drop=True).rename(
+    added_df = df[['WORKORDER_ADDED']].dropna().reset_index(drop=True).rename(
         columns={'WORKORDER_ADDED': 'Date_time'}
     )
     added_df['Added_ID'] = range(max_ids['added_'] + 1, max_ids['added_'] + 1 + len(added_df))
