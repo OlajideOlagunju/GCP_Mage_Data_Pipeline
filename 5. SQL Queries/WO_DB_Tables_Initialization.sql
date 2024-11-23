@@ -65,7 +65,7 @@ CREATE TABLE `started_` (
     -- Surrogate Key
     `Started_ID` int  NOT NULL ,
     -- The Datetime string
-    `Date_time` varchar(30)  NULL ,
+    `Date_time` DATETIME  NULL ,
     PRIMARY KEY (
         `Started_ID`
     )
@@ -75,7 +75,7 @@ CREATE TABLE `completed_` (
     -- Surrogate Key
     `Completed_ID` int  NOT NULL ,
     -- The Datetime string
-    `Date_time` varchar(30)  NULL ,
+    `Date_time` DATETIME  NULL ,
     PRIMARY KEY (
         `Completed_ID`
     )
@@ -85,7 +85,7 @@ CREATE TABLE `added_` (
     -- Surrogate Key
     `Added_ID` int  NOT NULL ,
     -- The Datetime string
-    `Date_time` varchar(30)  NULL ,
+    `Date_time` DATETIME  NULL ,
     PRIMARY KEY (
         `Added_ID`
     )
