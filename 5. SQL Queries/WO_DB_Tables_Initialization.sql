@@ -64,20 +64,8 @@ CREATE TABLE `service_request_` (
 CREATE TABLE `started_` (
     -- Surrogate Key
     `Started_ID` int  NOT NULL ,
-    -- The Year
-    `Year` int  NULL ,
-    -- The Quarter with 1st quarter = 1, ... 4th quarter = 4
-    `Quarter` int  NULL ,
-    -- The Month
-    `Month` int  NULL ,
-    -- The day of the week with Monday=0, Sunday=6.
-    `Day_of_Week` int  NULL ,
-    -- The Day
-    `Day` int  NULL ,
-    -- The Hour
-    `Hour` int  NULL ,
-    -- The Minute
-    `Minute` int  NULL ,
+    -- The Datetime string
+    `Date_time` varchar(30)  NULL ,
     PRIMARY KEY (
         `Started_ID`
     )
@@ -86,20 +74,8 @@ CREATE TABLE `started_` (
 CREATE TABLE `completed_` (
     -- Surrogate Key
     `Completed_ID` int  NOT NULL ,
-    -- The Year
-    `Year` int  NULL ,
-    -- The Quarter with 1st quarter = 1, ... 4th quarter = 4
-    `Quarter` int  NULL ,
-    -- The Month
-    `Month` int  NULL ,
-    -- The day of the week with Monday=0, Sunday=6.
-    `Day_of_Week` int  NULL ,
-    -- The Day
-    `Day` int  NULL ,
-    -- The Hour
-    `Hour` int  NULL ,
-    -- The Minute
-    `Minute` int  NULL ,
+    -- The Datetime string
+    `Date_time` varchar(30)  NULL ,
     PRIMARY KEY (
         `Completed_ID`
     )
@@ -108,20 +84,8 @@ CREATE TABLE `completed_` (
 CREATE TABLE `added_` (
     -- Surrogate Key
     `Added_ID` int  NOT NULL ,
-    -- The Year
-    `Year` int  NULL ,
-    -- The Quarter with 1st quarter = 1, ... 4th quarter = 4
-    `Quarter` int  NULL ,
-    -- The Month
-    `Month` int  NULL ,
-    -- The day of the week with Monday=0, Sunday=6.
-    `Day_of_Week` int  NULL ,
-    -- The Day
-    `Day` int  NULL ,
-    -- The Hour
-    `Hour` int  NULL ,
-    -- The Minute
-    `Minute` int  NULL ,
+    -- The Datetime string
+    `Date_time` varchar(30)  NULL ,
     PRIMARY KEY (
         `Added_ID`
     )
