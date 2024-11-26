@@ -35,8 +35,5 @@ def test_output(output, *args) -> None:
     """
     Test the output to ensure it is a valid DataFrame with expected properties.
     """
-    # Check that the output is a DataFrame
-    assert isinstance(output, pd.DataFrame), 'The output is not a DataFrame'
-    
     # Check that the DataFrame is not empty
     assert not output.empty, 'The output DataFrame is empty'

@@ -209,10 +209,27 @@ Let's see a snippet of the docker-compose.yml file that spins up the Mage instan
 
 
 # Extracting the Data in Mage
-- Connecting to Google Cloud Storage API and converting data to Dataframe
+Connecting to Google Cloud Storage API and converting data to Dataframe
 
 
-# Transforming the Data
+    config_path = path.join(get_repo_path(), 'io_config.yaml')
+    config_profile = 'default'
+
+    bucket_name = 'work_order_gcp_mage_pipeline-cloudgeek'
+    object_key = 'work-order-management-module.csv'
+
+    response = GoogleCloudStorage.with_config(ConfigFileLoader(config_path, config_profile)).load(
+        bucket_name,
+        object_key,
+    )
+
+
+
+# Transforming the Data in Mage
+
+We will use the Mage transformer to carry out data cleaning and transformation steps, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. 
+
+
 Viewing the [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv) seen below, it contains 206,058 Rows and 7 Columns. For the sake of understanding each of the steps in the data transformation which is the 'T' in ETL, we will use a jupyter notebook to replicate the transformation we will eventually do in mage. Loading the dataset in a dataframe shows the information below:
 
 ![source_dataset_info](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/source_dataset_info.png)
@@ -236,12 +253,14 @@ Here are a few things we need to do in the data cleaning step:
 ### Dealing with 'Out of Range' Datetime values
 
 
+![compute_engine_7](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_7.png)
+
 ![Out_of_range_datetimes](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/Out_of_range_datetimes.png)
 
 
 ### Enforcing Datatypes
 
-Convieniently enough, the first two columns have already been formatted as integer type columns in the Pandas Dataframe. T
+Convieniently enough, the first two columns have already been formatted as integer type columns in the Pandas Dataframe.
 
 ### Enforcing Datatype length constraints
 
@@ -255,18 +274,78 @@ We have removed 10,030 Duplicate Records
 ## Creating Fact and Dimension Tables
 
 
-## Mage Transformer
-We will use the Mage transformer to essentially replicate all the transformation steps above, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. 
-
-# Loading the Data
 
 
 
-# More GCP Configuration
+
+
+# Loading the Data to MariaDB and BigQuery Data Warehouse
+
 
 ## Setting up Google BigQuery
 
 
+## Mage Data Exporter
+
+
+
+Export to BigQuery
+    
+    for key, value in data.items():
+        table_id = 'data-pipelines-437522.WorkOrderModule.{}'.format(key)  # Specify the name of the table to export data to
+        BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).export(
+            DataFrame(value),
+            table_id,
+            if_exists='append',  # Specify resolution policy if table name already exists
+        )
+
+Export to MariaDB
+
+    for key, value in data.items():
+        table_name = '{}'.format(key)  # Specify the name of the table to export data to
+        config_path = path.join(get_repo_path(), 'io_config.yaml')
+        config_profile = 'default'
+
+        with MySQL.with_config(ConfigFileLoader(config_path, config_profile)) as loader:
+            loader.export(
+                DataFrame(value),
+                schema_name=None,
+                auto_clean_name=False,
+                table_name=table_name,
+                index=False,  # Specifies whether to include index in exported table
+                if_exists='append',  # Specify resolution policy if table name already exists
+            )
+
+
+## Create Views on BigQuery
+
+
+### Extracting Backlog Data
+    
+    
+    @data_loader
+    def load_data_from_big_query(*args, **kwargs):
+
+        query = 'SELECT * FROM `data-pipelines-437522.WorkOrderModule.Backlog`'
+        
+        config_path = path.join(get_repo_path(), 'io_config.yaml')
+        config_profile = 'default'
+        backlog = BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).load(query)
+        if not backlog.empty:
+            backlog.to_csv('/home/src/backlog.csv')
+        
+        return backlog
+
+![compute_engine_8](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_8.png)
+
+![backlog_list](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/backlog_list.png)
+
+
+# Mage Data Orchestration Summary
+
+
+
+# Data Viz
 
 ## Setting up Google Looker Studio
 [Dashboard](https://lookerstudio.google.com/reporting/cf1ba5c7-4392-40b6-af22-c29703d6357c/page/pfFWE)
