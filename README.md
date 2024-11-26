@@ -269,3 +269,7 @@ We will use the Mage transformer to essentially replicate all the transformation
 
 
 ## Setting up Google Looker Studio
+[Dashboard](https://lookerstudio.google.com/reporting/cf1ba5c7-4392-40b6-af22-c29703d6357c/page/pfFWE)
+
+![looker_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/looker_5.jpg)
+
