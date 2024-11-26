@@ -33,7 +33,7 @@ def load_from_google_cloud_storage(*args, **kwargs):
 @test
 def test_output(output, *args) -> None:
     """
-    Test the output to ensure it is a valid DataFrame with expected properties.
+    Test the output to ensure it is a valid DataFrame.
     """
     # Check that the DataFrame is not empty
     assert not output.empty, 'The output DataFrame is empty'
