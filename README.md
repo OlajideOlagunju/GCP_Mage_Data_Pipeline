@@ -191,7 +191,7 @@ Let's see a snippet of the docker-compose.yml file that spins up the Mage instan
         environment:
             MYSQL_ROOT_PASSWORD: <insert your root password>
             MYSQL_USER: <insert your preferred username>
-            MYSQL_PASSWORD: <insert your user password>
+            MYSQL_PASSWORD: <insert your preferred user password>
             MYSQL_DATABASE: WorkOrderModule
         ports:
             - 3306:3306
@@ -204,11 +204,18 @@ Let's see a snippet of the docker-compose.yml file that spins up the Mage instan
             - ./WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql
         restart: on-failure:5
 
-## Setting up MariaDB
+Under "environment" you can type in what you prefer your access details to be. In addition, the "/WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql" under "volumes" enables me to initialize my MariaDB instance with a SQL script I have already put in the directory where the MariaDB instance is installed (The script can be found [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/5.%20SQL%20Queries/WO_DB_Tables_Initialization.sql)). Finally its important to note that Mage by default runs on  port 6789, while Maria DB runs on port 3306.
 
+## Accessing MariaDB
+Once the Docker compose command has been run in the previous step, you can use any SQL administration tool to access the DB. I'll use HeidiSQL to access the DB. After opening HeidiSQL, create a new session, select the "Network type" as MariaDB, for "Hostname / IP" use the IP address for your server instance in compute engine (Which is where your Docker container that contains Maria DB is running). Finally enter the username, password, and port specified in the docker compose script previously.
 
+![mariadb_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mariadb_1.png)
 
-# Extracting the Data in Mage
+If everything has been setup properly, when you login to access the database, you should see the following empty tables below:
+
+![mariadb_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mariadb_2.png)
+
+# Extracting the Data using Mage
 Connecting to Google Cloud Storage API and converting data to Dataframe
 
 
