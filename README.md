@@ -219,7 +219,7 @@ If everything has been setup properly, when you login to access the database, yo
 
 
 ## Configuring Mage Instance
-Log onto the Mage instance on your web browser using the socket address: "XX.XX.XX.XXX:6789". Replace XX.XX.XX.XXX with the IP address for your server instance in compute engine. Once you login, select Pipelines on the left bar, and then create a new pipeline.
+Log onto the Mage instance on your web browser using the socket address: "XX.XX.XX.XXX:6789". Replace XX.XX.XX.XXX with the IP address for your server instance in compute engine. Once you login, select Pipelines on the left bar, and then create a new pipeline. I'll select 'Standard (batch)' for the type of pipeline and then name the pipeline.
 
 ![mage_pipeline_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_1.png)
 
@@ -233,40 +233,74 @@ To configure the pipeline, we need to set our Google Cloud and MariaDB variables
 
 ![mage_pipeline_4](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_4.png)
 
-
-
 ![mage_pipeline_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_5.png)
 
 
-
 # Extracting the Data using Mage
+Create a new 'data loader' block in your pipeline to get started. Since we want to connect to our Cloud Storage bucket in GCP and extract the work order data, we can select the 'Google Cloud Storage' block.
 
-Create a new 'data loader' block in your pipeline to get started.
+![mage_pipeline_14](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_14.png)
 
+Here the code snippet that helps connect to the Google Cloud Storage API and convert the resulting object into a Dataframe in Mage.
 
+    @data_loader
+    def load_from_google_cloud_storage(*args, **kwargs):
+        """
+        Loading data from a Google Cloud Storage bucket.
+        Specify your configuration settings in 'io_config.yaml'.
 
-Connecting to Google Cloud Storage API and converting data to Dataframe
+        Docs: https://docs.mage.ai/design/data-loading#googlecloudstorage
+        """
+        config_path = path.join(get_repo_path(), 'io_config.yaml')
+        config_profile = 'default'
 
+        bucket_name = 'work_order_gcp_mage_pipeline-cloudgeek' # Specify the Bucket name
+        object_key = 'work-order-management-module.csv' # Specify the file name in the Bucket
 
-    config_path = path.join(get_repo_path(), 'io_config.yaml')
-    config_profile = 'default'
+        response = GoogleCloudStorage.with_config(ConfigFileLoader(config_path, config_profile)).load(
+            bucket_name,
+            object_key,
+        )
+        return response
 
-    bucket_name = 'work_order_gcp_mage_pipeline-cloudgeek'
-    object_key = 'work-order-management-module.csv'
+View the full source code for this step [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/6.%20Mage%20ETL/extract_phase.py).
 
-    response = GoogleCloudStorage.with_config(ConfigFileLoader(config_path, config_profile)).load(
-        bucket_name,
-        object_key,
-    )
+In addition, we also need to get the last ID for each of the tables in MariaDB/BigQuery so that when our batch pipeline runs, it appends new surrogate IDs for each element in the tables, making sure there is no clash of IDs. Hence, we will create another 'data loader' block as part of our Extraction phase and which will later on feed our Transformation phase.
 
+Here is a snippet of the code that'll help us do that:
+
+    @data_loader
+    def load_data_from_mysql(*args, **kwargs) -> dict:
+        # Database configuration settings are specified in 'io_config.yaml'
+        db_tables_and_IDs = {
+            'service_request_': 'ServiceRequest_ID',
+            'wo_activity_': 'Activity_ID',
+            'started_': 'Started_ID',
+            'completed_': 'Completed_ID',
+            'added_': 'Added_ID',
+            'work_order_fact': 'WorkOrder_ID'
+        }
+        
+        max_ids = {}
+        config_path = path.join(get_repo_path(), 'io_config.yaml')
+        config_profile = 'default'
+        
+        with MySQL.with_config(ConfigFileLoader(config_path, config_profile)) as loader:
+            for table, primary_key in db_tables_and_IDs.items():
+                query = f'SELECT MAX({primary_key}) AS max_id FROM {table}'
+                result = loader.load(query)
+                max_ids[table] = result['max_id'][0] if not result.empty else None  # Store the max ID in the dictionary
+        return max_ids
+
+View the full source code for this step [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/6.%20Mage%20ETL/get_max_ids.py).
 
 
 # Transforming the Data in Mage
 
-We will use the Mage transformer to carry out data cleaning and transformation steps, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. 
+We will use the Mage transformer to carry out data cleaning and transformation steps, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. You can view the full 
 
 
-Viewing the [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv) seen below, it contains 206,058 Rows and 7 Columns. For the sake of understanding each of the steps in the data transformation which is the 'T' in ETL, we will use a jupyter notebook to replicate the transformation we will eventually do in mage. Loading the dataset in a dataframe shows the information below:
+Viewing the [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv) seen below, it contains 206,058 Rows and 7 Columns. For the sake of understanding each of the steps in the data transformation which is the 'T' in ETL, we will use a jupyter notebook output to show the transformation results on each step. Loading the dataset in a dataframe shows the information below:
 
 ![source_dataset_info](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/source_dataset_info.png)
 
@@ -356,7 +390,7 @@ Export to MariaDB
 ## Create Views on BigQuery
 
 
-### Extracting Backlog Data
+### Extracting Backlog Data from BigQuery using Mage
     
     
     @data_loader

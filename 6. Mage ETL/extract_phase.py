@@ -12,7 +12,7 @@ import pandas as pd
 @data_loader
 def load_from_google_cloud_storage(*args, **kwargs):
     """
-    Template for loading data from a Google Cloud Storage bucket.
+    Loading data from a Google Cloud Storage bucket.
     Specify your configuration settings in 'io_config.yaml'.
 
     Docs: https://docs.mage.ai/design/data-loading#googlecloudstorage
