@@ -61,7 +61,6 @@ BigQuery is used as the data warehousing tool as it is ideal for handling large-
 Finally, the dashboard visualization including client requested metrics will be done through Looker Studio. Since Looker Studio is part of the GCP ecosystem, it integrates well with BigQuery to provide seamless visualization of the data processed in the pipeline.
 
 
-
 # The Source Dataset
 The source data is a spreadsheet containing maintenance work orders associated with Customer Service Requests. The dataset will be updated daily from the Client's ERP tool and loaded unto the Google Cloud storage platform before the data transformation step. The primary field in the dataset is the 'WORKORDER_NUMBER' which gives the unique ERP system-generated Work order number. Most queries from the DB will be based on aggregating this field over time periods. [View the data dictionary](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/Data%20Dictionary%20-%20Work%20Order%20Management%20Module%20Dataset.pdf) below to see a more detailed description of the dataset.
 
@@ -645,6 +644,7 @@ I can verify the Work Order Backlog list is saved on the VM as seen below:
 
 
 ## Scheduling Pipeline Runs via Mage Triggers
+Next, I'll schedule the pipeline to run daily. On the left pane, select 'Triggers', then click to create a new trigger. For this pipeline, I'll select the trigger type as 'Schedule' and frequency to 'Daily'. I'll also replicate the same for the Backlog list pipeline and schedule it to 'Monthly'.
 
 ![mage_pipeline_6](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_6.png)
 
@@ -652,16 +652,19 @@ I can verify the Work Order Backlog list is saved on the VM as seen below:
 
 ![mage_pipeline_8](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_8.png)
 
+![mage_pipeline_13](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_13.png)
+
+Next, we'll enable the trigger. You can run the trigger once to test the pipeline if you'd like. In addition, if you click the icon under 'Logs' you can see the status of the pipeline running. If there are errors on the pipeline, you can pinpoint them and troubleshoot.
+
 ![mage_pipeline_9](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_9.png)
 
 ![mage_pipeline_10](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_10.png)
-
-![mage_pipeline_13](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_13.png)
 
 
 # Data Viz
 
 ## Setting up Google Looker Studio
+
 [Dashboard](https://lookerstudio.google.com/reporting/cf1ba5c7-4392-40b6-af22-c29703d6357c/page/pfFWE)
 
 ![looker_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/looker_5.jpg)
