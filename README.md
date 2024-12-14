@@ -574,30 +574,15 @@ Once the export is done we can verify the results in HeidiSQL for the database a
 ![bigquery_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_5.png)
 
 
-## Create Views on BigQuery
-I'll run a few queries to get the:
-- Resolution rate of Work Orders
-- Oldest Work Orders (Backlog)
-- Cumulative Backlog Count
-- Completed versus Not Completed Work Order Ratio
-
-Here's a snippet of the SQL query to get the resolution rate of the Work Orders:
-
-    SELECT CAST(FLOOR((COUNT(fact_.Completed_ID) / COUNT(fact_.WorkOrderNumber))*100) AS INT64) AS Resolution_Rate, 
-        EXTRACT(YEAR FROM PARSE_DATETIME('%Y-%m-%dT%H:%M:%S', add_.Date_time)) AS Year_Added
-
-    FROM `WorkOrderModule.work_order_fact` AS fact_
-    LEFT JOIN `WorkOrderModule.added_` AS add_ on fact_.Added_ID = add_.Added_ID
-
-    WHERE EXTRACT(YEAR FROM PARSE_DATETIME('%Y-%m-%dT%H:%M:%S', add_.Date_time)) IS NOT NULL
-    GROUP BY Year_Added
-    ORDER BY Year_Added DESC;
-
-View all the queries [here](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv).
-
 ### Extracting Backlog Data from BigQuery using Mage
+In this step, I'll create another Mage pipeline to extract all the backlog work orders. I define backlog as work orders that have not been completed in over 3 years. Inside this new pipeline, I'll create a single data loader block to extract the Backlog data from BigQuery. Once I extract them, I'll save them to the VM.
 
-    
+![mage_pipeline_11](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_11.png)
+
+![mage_pipeline_12](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_12.png)
+
+Here's a snippet of the data loader block in Mage.
+
     @data_loader
     def load_data_from_big_query(*args, **kwargs):
         """
@@ -618,14 +603,57 @@ View all the queries [here](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipelin
 
 View the full source code for this step [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/6.%20Mage%20ETL/extract_backlog.py).
 
+I can verify the Work Order Backlog list is saved on the VM as seen below:
+
 ![compute_engine_8](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_8.png)
 
 ![backlog_list](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/backlog_list.png)
 
 
 # Mage Data Orchestration Summary
+A wholistic view of the ETL pipeline is shown below. The 
 
 ![mage_pipeline_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_3.png)
+
+![mage_pipeline_6](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_6.png)
+
+![mage_pipeline_7](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_7.png)
+
+![mage_pipeline_8](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_8.png)
+
+![mage_pipeline_9](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_9.png)
+
+![mage_pipeline_10](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_10.png)
+
+![mage_pipeline_13](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_13.png)
+
+
+## Create Views on BigQuery
+I'll run a few queries to get the:
+- Resolution rate of Work Orders
+- Oldest Work Orders (Backlog)
+- Cumulative Backlog Count
+- Completed versus Not Completed Work Order Ratio
+
+Here's a snippet of the SQL query to get the resolution rate of the Work Orders:
+
+    SELECT CAST(FLOOR((COUNT(fact_.Completed_ID) / COUNT(fact_.WorkOrderNumber))*100) AS INT64) AS Resolution_Rate, 
+        EXTRACT(YEAR FROM PARSE_DATETIME('%Y-%m-%dT%H:%M:%S', add_.Date_time)) AS Year_Added
+
+    FROM `WorkOrderModule.work_order_fact` AS fact_
+    LEFT JOIN `WorkOrderModule.added_` AS add_ on fact_.Added_ID = add_.Added_ID
+
+    WHERE EXTRACT(YEAR FROM PARSE_DATETIME('%Y-%m-%dT%H:%M:%S', add_.Date_time)) IS NOT NULL
+    GROUP BY Year_Added
+    ORDER BY Year_Added DESC;
+
+View all the queries [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/tree/main/5.%20SQL%20Queries/BigQuery).
+
+Next, I'll save each query as a view in BigQuery. 
+
+![bigquery_6](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_6.png)
+
+![bigquery_7](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_7.png)
 
 
 # Data Viz
