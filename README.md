@@ -1,7 +1,6 @@
 # Resolution Rate for Work Orders | Google Cloud & Mage Pipeline
 An end-to-end data pipleline solution to process and analyze Maintenance Work Orders using Mage, Google BigQuery, MariaDB, and Looker Studio. This prject features integration of cloud tools for scalable data storage, transformation, and visualization based on Client requirements.
 
-
 # Business Case
 The client needs a solution to automatically ingest their maintenance work orders data from their existing spreadsheets and effectively visualize them for reporting. The key metric they are looking to visualize is the resolution rate of work orders based on the activity carried out over time.
 
@@ -107,6 +106,7 @@ Next, I'll need to create a private key to give access to the Mage AI Instance l
 I'll then create a new private key for the service account. Click on 'Add Key' then 'Create new key' and afterwards select the 'JSON' key type. The private key details will be automatically downloaded to the computer.
 
 ![cloud_storage_4](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_4.png)
+
 
 ### Uploading the Source Data to the Bucket
 I can upload the source data to the bucket by opening the bucket and clicking on 'Upload' as seen below:
@@ -503,6 +503,7 @@ Also key to note that the Mage pipeline blocks natively give room for testing co
 # Loading the Data to MariaDB and BigQuery Data Warehouse
 in this step, I'll setup Google BigQuery, then I will configure the Mage Exporter to load data into MariaDB and BigQuery. Finally, I will create views in BigQuery to later aid my Data Visualization step in Looker Studio.
 
+
 ## Setting up Google BigQuery
 Open the BigQuery studio from the google cloud console, click on the 3 dots next to the project name and click on 'Create dataset'. Pick a name for your dataset, specify the location type, region and create the dataset. Note the Dataset ID to use in the Mage Exporter.
 
@@ -670,7 +671,7 @@ The final step here is to setup our data visualization in Google Looker Studio. 
 
 ![looker_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/looker_3.png)
 
-Once done, configure your report / visualizations based on your preference. For a good turorial on using Looker Studio, visit this [link](https://measureschool.com/looker-studio-charts/).
+Once done, configure your report / visualizations based on your preference. For a good tutorial on using Looker Studio, visit this [link](https://measureschool.com/looker-studio-charts/).
 
 My visualization can be viewed via this [link](https://lookerstudio.google.com/reporting/cf1ba5c7-4392-40b6-af22-c29703d6357c/page/pfFWE) and below:
 
@@ -678,4 +679,6 @@ My visualization can be viewed via this [link](https://lookerstudio.google.com/r
 
 
 # Conclusion
+Through the solution created, the main business needs for our client have been met. We are able to automatically ingest the maintenance work orders from spreadsheets on a daily schedule, transform them, load them to database / data warehouse and finally visualize the data. The key metric 'Resolution Rate' can be monitored by the client through this Dashboard.
 
+The functional and non-functional requirements for this solution have been carefully considered in the design and implementation, and this pipeline can be scaled up when there is a technical reason to do so.
