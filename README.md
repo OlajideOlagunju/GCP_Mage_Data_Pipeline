@@ -661,11 +661,21 @@ Next, we'll enable the trigger. You can run the trigger once to test the pipelin
 ![mage_pipeline_10](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_10.png)
 
 
-# Data Viz
+# Data Viz - Setting up Google Looker Studio
+The final step here is to setup our data visualization in Google Looker Studio. Open [Looker Studio](https://lookerstudio.google.com/), then click on create, select 'Report', then add your BigQuery Data source to the Report. You will need to add the four Views (Tables) that we created in BigQuery to this Report.
 
-## Setting up Google Looker Studio
+![looker_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/looker_1.png)
 
-[Dashboard](https://lookerstudio.google.com/reporting/cf1ba5c7-4392-40b6-af22-c29703d6357c/page/pfFWE)
+![looker_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/looker_2.png)
+
+![looker_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/looker_3.png)
+
+Once done, configure your report / visualizations based on your preference. For a good turorial on using Looker Studio, visit this [link](https://measureschool.com/looker-studio-charts/).
+
+My visualization can be viewed via this [link](https://lookerstudio.google.com/reporting/cf1ba5c7-4392-40b6-af22-c29703d6357c/page/pfFWE) and below:
 
 ![looker_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/looker_5.jpg)
+
+
+# Conclusion
 
