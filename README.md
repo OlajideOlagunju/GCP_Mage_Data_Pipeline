@@ -141,30 +141,7 @@ When you get in the bash terminal:
 - Install the Docker Engine using the instructions from this link: [Docker Engine](https://docs.docker.com/engine/install/debian/#install-using-the-repository) (for my VM, I used the apt repository to install the Docker Engine).
 - Install the Docker Compose plugin following the instructions from this link: [Docker Compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository).
 
-Next, I'll spin up a container (we'll be running Mage and MariaDB from this container) using 'docker compose up' from a custom github private repository I made in my account. You can fork a sample repository link [here](https://github.com/mage-ai/compose-quickstart) and then edit the code below with details pertinent to your github account and repository. Remember the Cloud storage private key that was downloaded to your computer during the cloud storage setup? Please also add that Private Key file (should be a '.json' file) to the github repository, then proceed to the next step.
-
-    git clone https://<your github access token goes here>@github.com/<github account name>/<repository name>.git gcp_mage_pipeline \
-    && cd gcp_mage_pipeline \
-    && cp dev.env .env && rm dev.env \
-    && docker compose up
-
-Run the above code in the bash terminal.
-
-If you get a permission denied error when spinning up the container instance, then try running the below code:
-
-    sudo groupadd docker
-    sudo usermod -aG docker $USER
-    newgrp docker
-
-Now check to see if the access is still denied by verifying that the code below works:
-
-    docker run hello-world
-
-If there's still an error, try reading this thread for tips: [Stack Overflow Thread](https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue).
-
-Mage and MariaDB should run on the External IP address of your VM plus the respective ports specified.
-
-For example, mage should run on "XX.XX.XX.XXX:6789" and Maria DB can be logged into via the server host IP of XX.XX.XX.XXX and port of 3306.
+Next, I'll spin up a container (we'll be running Mage and MariaDB from this container) using 'docker compose up' from a custom github private repository I made in my account. You can fork a sample repository link [here](https://github.com/mage-ai/compose-quickstart). Next edit the Dockerfile as you wish (if necessary for your case). I also edited the 'dev.env' file to reflect the project name as 'GCP_Pipeline'. 'GCP_Pipeline' would later on reflect as the name of my project in Mage.
 
 Let's see a snippet of the docker-compose.yml file that spins up the Mage instance and MariaDB database:
 
@@ -204,10 +181,42 @@ Let's see a snippet of the docker-compose.yml file that spins up the Mage instan
             - ./WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql
         restart: on-failure:5
 
-Under "environment" you can type in what you prefer your access details to be. In addition, the "/WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql" under "volumes" enables me to initialize my MariaDB instance with a SQL script I have already put in the directory where the MariaDB instance is installed (The script can be found [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/5.%20SQL%20Queries/WO_DB_Tables_Initialization.sql)). Finally its important to note that Mage by default runs on  port 6789, while Maria DB runs on port 3306.
+Under "environment" you can type in what you prefer your access details to be. In addition, the "/WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql" under "volumes" enables me to initialize my MariaDB instance with a SQL script I have already put in the directory where the MariaDB instance is installed (The script can be found [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/5.%20SQL%20Queries/WO_DB_Tables_Initialization.sql)).
+
+Next, edit the code below with details pertinent to your github account and repository. Remember the Cloud storage private key that was downloaded to your computer during the cloud storage setup? Please also add that Private Key file (should be a '.json' file) to the custom github repository, then proceed to the next step.
+
+    git clone https://<your github access token goes here>@github.com/<github account name>/<repository name>.git gcp_mage_pipeline \
+    && cd gcp_mage_pipeline \
+    && cp dev.env .env && rm dev.env \
+    && docker compose up
+
+Run the above code in the bash terminal.
+
+If you get a permission denied error when spinning up the container instance, then try running the below code:
+
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+    newgrp docker
+
+Now check to see if the access is still denied by verifying that the code below works:
+
+    docker run hello-world
+
+If there's still an error, try reading this thread for tips: [Stack Overflow Thread](https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue).
+
+Mage and MariaDB should run on the External IP address of your VM plus the respective ports specified.
+
+For example, mage should run on "XX.XX.XX.XXX:6789" and Maria DB can be logged into via the server host IP of XX.XX.XX.XXX and port of 3306. Mage by default runs on  port 6789, while Maria DB runs on port 3306.
+
+## Configuring Mage Instance
+Log onto the Mage instance on your local web browser using the url: "XX.XX.XX.XXX:6789". Replace XX.XX.XX.XXX with the IP address for your server instance in compute engine. Once you login, select Pipelines on the left bar, and then select to create a new pipeline.
+
+![mage_pipeline_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_1.png)
+
+![mage_pipeline_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_2.png)
 
 ## Accessing MariaDB
-Once the Docker compose command has been run in the previous step, you can use any SQL administration tool to access the DB. I'll use HeidiSQL to access the DB. After opening HeidiSQL, create a new session, select the "Network type" as MariaDB, for "Hostname / IP" use the IP address for your server instance in compute engine (Which is where your Docker container that contains Maria DB is running). Finally enter the username, password, and port specified in the docker compose script previously.
+Once the 'docker compose up' command has been run as shown earlier, you can use any SQL administration tool to access the DB. In my case, I'll use HeidiSQL to access the DB. After opening HeidiSQL, create a new session, select the "Network type" as MariaDB, for "Hostname / IP" use the IP address for your server instance in compute engine (Which is where your Docker container that contains Maria DB is running). Finally enter the username, password, and port specified in the docker compose script previously.
 
 ![mariadb_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mariadb_1.png)
 
