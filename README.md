@@ -574,62 +574,14 @@ Once the export is done we can verify the results in HeidiSQL for the database a
 ![bigquery_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_5.png)
 
 
-### Extracting Backlog Data from BigQuery using Mage
-In this step, I'll create another Mage pipeline to extract all the backlog work orders. I define backlog as work orders that have not been completed in over 3 years. Inside this new pipeline, I'll create a single data loader block to extract the Backlog data from BigQuery. Once I extract them, I'll save them to the VM.
-
-![mage_pipeline_11](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_11.png)
-
-![mage_pipeline_12](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_12.png)
-
-Here's a snippet of the data loader block in Mage.
-
-    @data_loader
-    def load_data_from_big_query(*args, **kwargs):
-        """
-        Extracting data from the BigQuery Data Warehouse.
-        Configuration settings are in 'io_config.yaml' which is in mage server.
-
-        Docs: https://docs.mage.ai/design/data-loading#bigquery
-        """
-        query = 'SELECT * FROM `data-pipelines-437522.WorkOrderModule.Backlog`'
-        
-        config_path = path.join(get_repo_path(), 'io_config.yaml')
-        config_profile = 'default'
-        backlog = BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).load(query)
-        if not backlog.empty:
-            backlog.to_csv('/home/src/backlog.csv')
-        
-        return backlog
-
-View the full source code for this step [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/6.%20Mage%20ETL/extract_backlog.py).
-
-I can verify the Work Order Backlog list is saved on the VM as seen below:
-
-![compute_engine_8](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_8.png)
-
-![backlog_list](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/backlog_list.png)
-
-
 # Mage Data Orchestration Summary
-A wholistic view of the ETL pipeline is shown below. The 
+A wholistic view of the ETL pipeline is shown below. In the Extract (E) step, the source data is extracted from Cloud storage on GCP, then the Highest IDs for the tables are gotten from the MariaDB database. In the Transform (T) step, the data is cleaned, and processed to give dimension and fact tables. This data is then taken to the final stage which is the Load (L) step, where the data is loaded to MariaDB and the BigQuery data warehouse.
 
 ![mage_pipeline_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_3.png)
 
-![mage_pipeline_6](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_6.png)
 
-![mage_pipeline_7](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_7.png)
-
-![mage_pipeline_8](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_8.png)
-
-![mage_pipeline_9](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_9.png)
-
-![mage_pipeline_10](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_10.png)
-
-![mage_pipeline_13](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_13.png)
-
-
-## Create Views on BigQuery
-I'll run a few queries to get the:
+## Creating Views on BigQuery
+In Bigquery, I'll run a few queries to get the:
 - Resolution rate of Work Orders
 - Oldest Work Orders (Backlog)
 - Cumulative Backlog Count
@@ -654,6 +606,57 @@ Next, I'll save each query as a view in BigQuery.
 ![bigquery_6](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_6.png)
 
 ![bigquery_7](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_7.png)
+
+
+## Extracting Backlog Data from BigQuery using Mage
+In this step, I'll create another Mage pipeline to extract all the backlog work orders. I define backlog as work orders that have not been completed in over 3 years. Inside this new pipeline, I'll create a single data loader block to extract the Backlog data from BigQuery. Once I extract them, I'll save them to the VM.
+
+![mage_pipeline_11](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_11.png)
+
+![mage_pipeline_12](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_12.png)
+
+Here's a snippet of the data loader block in Mage. The block will extract the data from the 'Oldest_WorkOrders' View in BigQuery and then save to the VM.
+
+    @data_loader
+    def load_data_from_big_query(*args, **kwargs):
+        """
+        Extracting data from the BigQuery Data Warehouse.
+        Configuration settings are in 'io_config.yaml' which is in mage server.
+
+        Docs: https://docs.mage.ai/design/data-loading#bigquery
+        """
+        query = 'SELECT * FROM `data-pipelines-437522.WorkOrderModule.Oldest_WorkOrders`'
+        
+        config_path = path.join(get_repo_path(), 'io_config.yaml')
+        config_profile = 'default'
+        backlog = BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).load(query)
+        if not backlog.empty:
+            backlog.to_csv('/home/src/backlog.csv')
+        
+        return backlog
+
+View the full source code for this step [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/6.%20Mage%20ETL/extract_backlog.py).
+
+I can verify the Work Order Backlog list is saved on the VM as seen below:
+
+![compute_engine_8](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_8.png)
+
+![backlog_list](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/backlog_list.png)
+
+
+## Scheduling Pipeline Runs via Mage Triggers
+
+![mage_pipeline_6](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_6.png)
+
+![mage_pipeline_7](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_7.png)
+
+![mage_pipeline_8](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_8.png)
+
+![mage_pipeline_9](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_9.png)
+
+![mage_pipeline_10](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_10.png)
+
+![mage_pipeline_13](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_13.png)
 
 
 # Data Viz

@@ -15,7 +15,7 @@ def load_data_from_big_query(*args, **kwargs):
 
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
-    query = 'SELECT * FROM `data-pipelines-437522.WorkOrderModule.Backlog`'
+    query = 'SELECT * FROM `data-pipelines-437522.WorkOrderModule.Oldest_WorkOrders`'
     
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
