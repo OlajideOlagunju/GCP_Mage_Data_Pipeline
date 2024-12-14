@@ -180,7 +180,7 @@ Let's see a snippet of the docker-compose.yml file that spins up the Mage instan
             - ./WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql
         restart: on-failure:5
 
-Under "environment" you can type in what you prefer your access details to be. In addition, the "/WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql" under "volumes" enables me to initialize my MariaDB instance with a SQL script I have already put in the directory where the MariaDB instance is installed (The script can be found [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/5.%20SQL%20Queries/WO_DB_Tables_Initialization.sql)).
+Under "environment" you can type in what you prefer your access details to be. In addition, the "/WO_DB_Tables_Initialization.sql:/docker-entrypoint-initdb.d/1.sql" under "volumes" enables me to initialize my MariaDB instance with a SQL script I have already put in the directory where the MariaDB instance is installed (The script can be found [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/5.%20SQL%20Queries/BigQuery/WO_DB_Tables_Initialization.sql)).
 
 Next, edit the code below with details pertinent to your github account and repository. Remember the Cloud storage private key that was downloaded to your computer during the cloud storage setup? Please also add that Private Key file (should be a '.json' file) to the custom github repository, then proceed to the next step.
 
@@ -238,7 +238,7 @@ To configure the pipeline, we need to set our Google Cloud and MariaDB variables
 ![mage_pipeline_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_5.png)
 
 
-![mage_pipeline_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_5.png)
+![mage_pipeline_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_3.png)
 
 
 # Extracting the Data using Mage
