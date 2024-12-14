@@ -139,7 +139,7 @@ When you get in the bash terminal:
 - Install the Docker Engine using the instructions from this link: [Docker Engine](https://docs.docker.com/engine/install/debian/#install-using-the-repository) (for my VM, I used the apt repository to install the Docker Engine).
 - Install the Docker Compose plugin following the instructions from this link: [Docker Compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository).
 
-Next, I'll spin up a container (we'll be running Mage and MariaDB from this container) using 'docker compose up' from a custom github private repository I made in my account. You can fork a sample repository link [here](https://github.com/mage-ai/compose-quickstart). Next edit the Dockerfile as you wish (if necessary for your case). I also edited the 'dev.env' file to reflect the project name as 'GCP_Pipeline'. 'GCP_Pipeline' would later on reflect as the name of my project in Mage.
+Next, I'll spin up a container (I'll be running Mage and MariaDB from this container) using 'docker compose up' from a custom github private repository I made in my account. You can fork a sample repository link [here](https://github.com/mage-ai/compose-quickstart). Next edit the Dockerfile as you wish (if necessary for your case). I also edited the 'dev.env' file to reflect the project name as 'GCP_Pipeline'. 'GCP_Pipeline' would later on reflect as the name of my project in Mage.
 
 Let's see a snippet of the docker-compose.yml file that spins up the Mage instance and MariaDB database:
 
@@ -359,7 +359,7 @@ After the conversion, if there are indeed invalid dates, we would then save it i
 
 ![Out_of_range_datetimes](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/Out_of_range_datetimes.png)
 
-Finally for this step, I'll convert the out of range values to and blank rows to 'NULL'.
+Finally for this step, I'll convert the out of range values and blank rows to 'NULL'.
 
     # Converting the out of range values and blank rows to NA values
     # Attempt to infer format of each date, and return NA for rows where conversion failed
@@ -367,12 +367,8 @@ Finally for this step, I'll convert the out of range values to and blank rows to
         df[element] = pd.to_datetime(df[element], infer_datetime_format=True, errors = 'coerce') 
 
 
-### Enforcing Datatypes
-Convieniently enough, the first two columns have already been formatted as integer type columns in the Pandas Dataframe.
-
-
-### Enforcing Datatype length constraints
-We will make sure all the columns are of the right data type so that processing downstream is easy. Here is a snippet of the code:
+### Enforcing datatypes and datatype length constraints
+We will make sure all the columns are of the right data type and length so that processing downstream (e.g. to the Database) is easy. Here is a snippet of the code:
 
     # Enforce WORKORDER_ACTIVITY_CODE and WORKORDER_ACTIVITY_DESCRIPTION to 'String' type
 
@@ -399,8 +395,10 @@ Next, we need to remove duplicate values on the dataset. Here is a snippet of th
 
     # Drop duplicates based on 'WORKORDER_NUMBER' column and reset the index
     df = df.drop_duplicates(subset=['WORKORDER_NUMBER']).reset_index(drop=True)
+    
     # Create a new column called 'WorkOrderID' for the index
     df['WorkOrderID'] = df.index
+    
     # Rearrange the column order
     df = df[['WorkOrderID', 
             'WORKORDER_NUMBER', 
@@ -411,13 +409,13 @@ Next, we need to remove duplicate values on the dataset. Here is a snippet of th
             'WORKORDER_COMPLETED', 
             'WORKORDER_ADDED']]
 
-We have removed 10,030 Duplicate Records as shown below:
+We have removed 10,030 Duplicate Records and the datatypes are apppropriate for downstream analysis as shown below:
 
 ![cleaned_source_dataset_info](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cleaned_source_dataset_info.png)
 
 
 ## Creating Fact and Dimension Tables
-In this step, we'll create 6 tables according to the database schema and map the cleaned data to these tables. 
+In this step, I'll create 6 tables according to the database schema and map the cleaned data to these tables. 
 
 ![Schema - WorkOrderModule DB](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/4.%20Database%20Schema/Schema%20-%20WorkOrderModule%20DB.png)
 
@@ -474,8 +472,35 @@ We can now put all the transformed tables in a dictionary/hashmap 'work_order_di
         "work_order_fact" : work_order_fact_df.to_dict()
         }
 
-# Loading the Data to MariaDB and BigQuery Data Warehouse
+![fact_and_dimension_tables](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/fact_and_dimension_tables.png)
 
+Also key to note that the Mage pipeline blocks natively give room for testing code. For the transformation step, here is a snippet of the testing function that is run for the block:
+
+    @test
+    def test_output(output, *args) -> None:
+        """
+        Test the output to ensure it is a valid dictionary with expected keys and structure.
+        """
+        # Check that the output is a dictionary
+        assert isinstance(output, dict), 'The output is not a dictionary'
+        
+        # Define expected keys in the output dictionary
+        expected_keys = ["wo_activity_", "service_request_", "started_", "completed_", "added_", "work_order_fact"]
+        
+        # Check that all expected keys are present in the output dictionary
+        missing_keys = [key for key in expected_keys if key not in output]
+        assert not missing_keys, f'Missing keys in output: {missing_keys}'
+        
+        # Check each key's value type to ensure they are DataFrame-like dictionaries
+        for key in expected_keys:
+            assert isinstance(output[key], dict), f'The value for key {key} is not a dictionary'
+        
+        # Check that the main DataFrame dictionary (work_order_fact) is not empty
+        assert output["work_order_fact"], "The work_order_fact dictionary is empty"
+
+
+# Loading the Data to MariaDB and BigQuery Data Warehouse
+in this step, I'll 
 
 ## Setting up Google BigQuery
 
