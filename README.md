@@ -679,6 +679,6 @@ My visualization can be viewed via this [link](https://lookerstudio.google.com/r
 
 
 # Conclusion
-Through the solution created, the main business needs for our client have been met. We are able to automatically ingest the maintenance work orders from spreadsheets on a daily schedule, transform them, load them to database / data warehouse and finally visualize the data. The key metric 'Resolution Rate' can be monitored by the client through this Dashboard.
+Through the solution created, the main business needs for my client has been met. I am able to automatically ingest the maintenance work orders from spreadsheets on a daily schedule, transform them, load them to database / data warehouse and finally visualize the data. The key metric 'Resolution Rate' can be monitored by the client through this Dashboard.
 
 The functional and non-functional requirements for this solution have been carefully considered in the design and implementation, and this pipeline can be scaled up / improved when there is a technical and practical reason to do so.
