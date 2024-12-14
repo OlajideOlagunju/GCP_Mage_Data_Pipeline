@@ -104,7 +104,6 @@ In the process of creating the bucket, I'll select 'Enforce public access preven
 
 ![cloud_storage_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cloud_storage_3.png)
 
-
 Next, I'll need to create a private key to give access to the Mage AI Instance later. Under 'IAM & Admin' on the left bar, I will select 'Service Accounts'. A default service account is usually provided for bucket instances, but if not for you, just create a new service account. Ensure to configure the required permissions for the specific principals (users, groups, domains, or service accounts - if many) including roles and IAM conditions where applicable.
 
 I'll then create a new private key for the service account. Click on 'Add Key' then 'Create new key' and afterwards select the 'JSON' key type. The private key details will be automatically downloaded to the computer.
@@ -208,12 +207,6 @@ Mage and MariaDB should run on the External IP address of your VM plus the respe
 
 For example, mage should run on "XX.XX.XX.XXX:6789" and Maria DB can be logged into via the server host IP of XX.XX.XX.XXX and port of 3306. Mage by default runs on  port 6789, while Maria DB runs on port 3306.
 
-## Configuring Mage Instance
-Log onto the Mage instance on your local web browser using the url: "XX.XX.XX.XXX:6789". Replace XX.XX.XX.XXX with the IP address for your server instance in compute engine. Once you login, select Pipelines on the left bar, and then select to create a new pipeline.
-
-![mage_pipeline_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_1.png)
-
-![mage_pipeline_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_2.png)
 
 ## Accessing MariaDB
 Once the 'docker compose up' command has been run as shown earlier, you can use any SQL administration tool to access the DB. In my case, I'll use HeidiSQL to access the DB. After opening HeidiSQL, create a new session, select the "Network type" as MariaDB, for "Hostname / IP" use the IP address for your server instance in compute engine (Which is where your Docker container that contains Maria DB is running). Finally enter the username, password, and port specified in the docker compose script previously.
@@ -223,6 +216,30 @@ Once the 'docker compose up' command has been run as shown earlier, you can use 
 If everything has been setup properly, when you login to access the database, you should see the following empty tables below:
 
 ![mariadb_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mariadb_2.png)
+
+
+## Configuring Mage Instance
+Log onto the Mage instance on your web browser using the socket address: "XX.XX.XX.XXX:6789". Replace XX.XX.XX.XXX with the IP address for your server instance in compute engine. Once you login, select Pipelines on the left bar, and then create a new pipeline.
+
+![mage_pipeline_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_1.png)
+
+![mage_pipeline_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_2.png)
+
+Once created, select 'Edit pipeline' to begin configuring your pipeline and also create the elements inside it.
+
+![mage_pipeline_2a](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_2a.png)
+
+To configure the pipeline, we need to set our Google Cloud and MariaDB variables in the 'io_config.yaml' file. Click on it and edit based on the details for your GCP and MariaDB services. Note that the 'GOOGLE_SERVICE_ACC_KEY_FILEPATH' should be the relative path to the GCP private key downloaded earlier and added to your custom github repository. That json private key file would be in home folder of your Mage instance. In addition, the 'GOOGLE_LOCATION' should be the server location where the GCP Bucket was created - in my case it is 'africa-south1'. The rest of the 'GOOGLE_SERVICE_ACC_KEY' parameters can be commented out and ignored.
+
+![mage_pipeline_4](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_4.png)
+
+
+
+![mage_pipeline_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_5.png)
+
+
+![mage_pipeline_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_5.png)
+
 
 # Extracting the Data using Mage
 Connecting to Google Cloud Storage API and converting data to Dataframe
