@@ -297,10 +297,11 @@ View the full source code for this step [here](https://github.com/OlajideOlagunj
 
 # Transforming the Data in Mage
 
-We will use the Mage transformer to carry out data cleaning and transformation steps, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. You can view the full 
+We will use the Mage transformer to carry out data cleaning and transformation steps, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. 
 
+However, for the sake of understanding each of the steps in the data transformation which is the 'T' in ETL, I have replicated the transformation in Jupyter notebooks and will use notebook outputs to show the transformation results on each step.
 
-Viewing the [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv) seen below, it contains 206,058 Rows and 7 Columns. For the sake of understanding each of the steps in the data transformation which is the 'T' in ETL, we will use a jupyter notebook output to show the transformation results on each step. Loading the dataset in a dataframe shows the information below:
+Viewing the [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv) seen below, it contains 206,058 Rows and 7 Columns. Loading the dataset in a dataframe shows the information below:
 
 ![source_dataset_info](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/source_dataset_info.png)
 
@@ -391,11 +392,16 @@ Export to MariaDB
 
 
 ### Extracting Backlog Data from BigQuery using Mage
-    
+
     
     @data_loader
     def load_data_from_big_query(*args, **kwargs):
+        """
+        Extracting data from the BigQuery Data Warehouse.
+        Configuration settings are in 'io_config.yaml' which is in mage server.
 
+        Docs: https://docs.mage.ai/design/data-loading#bigquery
+        """
         query = 'SELECT * FROM `data-pipelines-437522.WorkOrderModule.Backlog`'
         
         config_path = path.join(get_repo_path(), 'io_config.yaml')
@@ -405,6 +411,8 @@ Export to MariaDB
             backlog.to_csv('/home/src/backlog.csv')
         
         return backlog
+
+View the full source code for this step [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/6.%20Mage%20ETL/extract_backlog.py).
 
 ![compute_engine_8](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_8.png)
 
