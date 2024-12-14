@@ -472,6 +472,8 @@ We can now put all the transformed tables in a dictionary/hashmap 'work_order_di
         "work_order_fact" : work_order_fact_df.to_dict()
         }
 
+We can verify the resulting tables as seen below:
+
 ![fact_and_dimension_tables](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/fact_and_dimension_tables.png)
 
 Also key to note that the Mage pipeline blocks natively give room for testing code. For the transformation step, here is a snippet of the testing function that is run for the block:
@@ -563,16 +565,35 @@ Export to BigQuery
 
 Once the export is done we can verify the results in HeidiSQL for the database and in BigQuery as well.
 
-![bigquery_4](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_4.png)
-
-![bigquery_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_5.png)
-
 ![mariadb_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mariadb_3.png)
 
 ![mariadb_4](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mariadb_4.png)
 
-## Create Views on BigQuery
+![bigquery_4](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_4.png)
 
+![bigquery_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_5.png)
+
+
+## Create Views on BigQuery
+I'll run a few queries to get the:
+- Resolution rate of Work Orders
+- Oldest Work Orders (Backlog)
+- Cumulative Backlog Count
+- Completed versus Not Completed Work Order Ratio
+
+Here's a snippet of the SQL query to get the resolution rate of the Work Orders:
+
+    SELECT CAST(FLOOR((COUNT(fact_.Completed_ID) / COUNT(fact_.WorkOrderNumber))*100) AS INT64) AS Resolution_Rate, 
+        EXTRACT(YEAR FROM PARSE_DATETIME('%Y-%m-%dT%H:%M:%S', add_.Date_time)) AS Year_Added
+
+    FROM `WorkOrderModule.work_order_fact` AS fact_
+    LEFT JOIN `WorkOrderModule.added_` AS add_ on fact_.Added_ID = add_.Added_ID
+
+    WHERE EXTRACT(YEAR FROM PARSE_DATETIME('%Y-%m-%dT%H:%M:%S', add_.Date_time)) IS NOT NULL
+    GROUP BY Year_Added
+    ORDER BY Year_Added DESC;
+
+View all the queries [here](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv).
 
 ### Extracting Backlog Data from BigQuery using Mage
 
