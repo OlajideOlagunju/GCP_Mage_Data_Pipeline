@@ -1,5 +1,5 @@
 # Resolution Rate for Work Orders | Google Cloud & Mage Pipeline
-An end-to-end data pipleline solution to process and analyze Maintenance Work Orders using Mage, Google BigQuery, MariaDB, and Looker Studio. This project features integration of cloud tools for scalable data storage, transformation, and visualization based on Client requirements.
+An end-to-end data pipeline solution to process and analyze Maintenance Work Orders using Mage, Google BigQuery, MariaDB, and Looker Studio. This project features integration of cloud tools for scalable data storage, transformation, and visualization based on Client requirements.
 
 # Business Case
 The client needs a solution to automatically ingest their maintenance work orders data from their existing spreadsheets and effectively visualize them for reporting. The key metric they are looking to visualize is the resolution rate of work orders based on the activity carried out over time.
@@ -23,7 +23,7 @@ Cloud Infrastructure - [Google Cloud Platform (GCP)](https://cloud.google.com/) 
 
 Workflow Orchestration: [Mage](https://www.mage.ai/) ![Mage](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/7.%20Icons/Mage%20ai.png)
 
-(Contibute to this open source project - https://github.com/mage-ai/mage-ai)
+(Contribute to this open source project - https://github.com/mage-ai/mage-ai)
 
 Containerization: [Docker](https://www.docker.com/) ![Docker](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/7.%20Icons/Docker.png)
 
@@ -43,7 +43,7 @@ Data Visualization: [Google Looker Studio](https://lookerstudio.google.com/) ![G
 
 [//]: # (Explain Architecture Choices for Tools here)
 
-Google Cloud Platform (GCP) was chosen as the Cloud platform beacuse the client already utilizes GCP for other daily processes, making it more cost-effective, and easier to manage.
+Google Cloud Platform (GCP) was chosen as the Cloud platform because the client already utilizes GCP for other daily processes, making it more cost-effective, and easier to manage.
 
 Python was chosen as the coding language as it is rich with libraries for data processing, manipulation, and analysis like Pandas, NumPy etc. It also has extensive support for data pipelines and orchestration (e.g., Airflow, Mage) and integrates seamlessly with Google Cloud.
 
@@ -408,7 +408,7 @@ Next, we need to remove duplicate values on the dataset. Here is a snippet of th
             'WORKORDER_COMPLETED', 
             'WORKORDER_ADDED']]
 
-We have removed 10,030 Duplicate Records and the datatypes are apppropriate for downstream analysis as shown below:
+We have removed 10,030 Duplicate Records and the datatypes are appropriate for downstream analysis as shown below:
 
 ![cleaned_source_dataset_info](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cleaned_source_dataset_info.png)
 
@@ -461,7 +461,7 @@ Finally we create the main fact table (work_order_fact_df) as shown in the schem
 
     work_order_fact_df['WorkOrder_ID'] = range(max_ids['work_order_fact'] + 1, max_ids['work_order_fact'] + 1 + len(work_order_fact_df))
 
-We can now put all the transformed tables in a dictionary/hashmap 'work_order_dict' for further processing downstream of the data piepline.
+We can now put all the transformed tables in a dictionary/hashmap 'work_order_dict' for further processing downstream of the data pipeline.
 
     work_order_dict = {"wo_activity_" : activity_df.to_dict(),
         "service_request_" : service_request_df.to_dict(),
@@ -515,7 +515,7 @@ Open the BigQuery studio from the google cloud console, click on the 3 dots next
 
 
 ## Mage Data Exporter
-I'll create two exporter blocks - one for MariaDB and one for BigQuery. For the exporter blocks, everytime we run the batch pipeline, it'll append the new data to the Database and BigQuery Data Warehouse. You don't need to manually create the tables in BigQuery dataset, as it would create it automatically on the first run. Here is a snippet of the code:
+I'll create two exporter blocks - one for MariaDB and one for BigQuery. For the exporter blocks, every time we run the batch pipeline, it'll append the new data to the Database and BigQuery Data Warehouse. You don't need to manually create the tables in BigQuery dataset, as it would create it automatically on the first run. Here is a snippet of the code:
 
 Export to MariaDB
 
