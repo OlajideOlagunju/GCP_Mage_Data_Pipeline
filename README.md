@@ -264,7 +264,7 @@ Here the code snippet that helps connect to the Google Cloud Storage API and con
 
 View the full source code for this step [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/6.%20Mage%20ETL/extract_phase.py).
 
-In addition, we also need to get the last ID for each of the tables in MariaDB/BigQuery so that when our batch pipeline runs, it appends new surrogate IDs for each element in the tables, making sure there is no clash of IDs. Hence, we will create another 'data loader' block as part of our Extraction phase and which will later on feed our Transformation phase.
+In addition, we also need to get the last ID for each of the tables in MariaDB/BigQuery so that when our batch pipeline runs, it appends new surrogate IDs for each element in the tables, making sure there is no clash of IDs. Hence, I'll create another 'data loader' block as part of our Extraction phase which will later on feed the Transformation phase.
 
 Here is a snippet of the code that'll help us do that:
 
@@ -295,7 +295,7 @@ View the full source code for this step [here](https://github.com/OlajideOlagunj
 
 
 # Transforming the Data in Mage
-We will use the Mage transformer to carry out data cleaning and transformation steps, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. In the mage transformer ensure to import the pandas library in python i.e. "import pandas as pd".
+I'll use the Mage transformer block to carry out data cleaning and transformation steps, then I'll also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. In the mage transformer ensure to import the pandas library in python i.e. "import pandas as pd".
 
 View the full source code for the Mage transformation step [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/6.%20Mage%20ETL/transform_phase.py).
 
@@ -309,7 +309,7 @@ The [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/mai
 
 
 ## Cleaning the data
-In this step, we will deal with out-of-range data (specifically for time values), impose Data type constraints, find and remove duplicate values.
+In this step, I'll deal with out-of-range data (specifically for time values), impose Data type constraints, find and remove duplicate values.
 
 Here are a few things we need to do in the data cleaning step:
 - Remove the last column called 'TIME_STAMP' as it only shows the date that the data was exported from the Client's ERP to excel which is not relevant for our project.
@@ -328,7 +328,7 @@ The 'TIME_STAMP' column is not included in the analysis. It only shows the date 
 
 
 ### Dealing with 'Out of Range' Datetime values
-In this step, we'd extract all the out of range date values for the 'WORKORDER_STARTED', 'WORKORDER_COMPLETED', 'WORKORDER_ADDED' columns. To do this, we will use the 'to_datetime' method to convert all the non-null data in each column to a datetime object. If the conversion fails, it means that the data is not in the datetime range or is not a valid input. Here is a snippet of the code:
+In this step, we'd extract all the out of range date values for the 'WORKORDER_STARTED', 'WORKORDER_COMPLETED', 'WORKORDER_ADDED' columns. To do this, I'll use the 'to_datetime' method to convert all the non-null data in each column to a datetime object. If the conversion fails, it means that the data is not in the datetime range or is not a valid input. Here is a snippet of the code:
 
     invalid_dates = pd.DataFrame()
 
@@ -368,7 +368,7 @@ Finally for this step, I'll convert the out of range values and blank rows to 'N
 
 
 ### Enforcing datatypes and datatype length constraints
-We will make sure all the columns are of the right data type and length so that processing downstream (e.g. to the Database) is easy. Here is a snippet of the code:
+I'll make sure all the columns are of the right data type and length so that processing downstream (e.g. to the Database) is easy. Here is a snippet of the code:
 
     # Enforce WORKORDER_ACTIVITY_CODE and WORKORDER_ACTIVITY_DESCRIPTION to 'String' type
 
@@ -500,42 +500,76 @@ Also key to note that the Mage pipeline blocks natively give room for testing co
 
 
 # Loading the Data to MariaDB and BigQuery Data Warehouse
-in this step, I'll 
+in this step, I'll setup Google BigQuery, then I will configure the Mage Exporter to load data into MariaDB and BigQuery. Finally, I will create views in BigQuery to later aid my Data Visualization step in Looker Studio.
 
 ## Setting up Google BigQuery
+Open the BigQuery studio from the google cloud console, click on the 3 dots next to the project name and click on 'Create dataset'. Pick a name for your dataset, specify the location type, region and create the dataset. Note the Dataset ID to use in the Mage Exporter.
+
+![bigquery_1](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_1.png)
+
+![bigquery_2](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_2.png)
+
+![bigquery_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_3.png)
 
 
 ## Mage Data Exporter
-
-
-
-Export to BigQuery
-    
-    for key, value in data.items():
-        table_id = 'data-pipelines-437522.WorkOrderModule.{}'.format(key)  # Specify the name of the table to export data to
-        BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).export(
-            DataFrame(value),
-            table_id,
-            if_exists='append',  # Specify resolution policy if table name already exists
-        )
+I'll create two exporter blocks - one for MariaDB and one for BigQuery. For the exporter blocks, everytime we run the batch pipeline, it'll append the new data to the Database and BigQuery Data Warehouse. You don't need to manually create the tables in BigQuery dataset, as it would create it automatically on the first run. Here is a snippet of the code:
 
 Export to MariaDB
 
-    for key, value in data.items():
-        table_name = '{}'.format(key)  # Specify the name of the table to export data to
+    @data_exporter
+    def export_data_to_mysql(data, **kwargs) -> None:
+        """
+        Exporting data to the MariaDB database.
+        Configuration settings are in 'io_config.yaml' which is in mage server.
+
+        Docs: https://docs.mage.ai/design/data-loading#mysql
+        """
+        for key, value in data.items():
+            table_name = '{}'.format(key)  # Specify the name of the table to export data to
+            config_path = path.join(get_repo_path(), 'io_config.yaml')
+            config_profile = 'default'
+
+            with MySQL.with_config(ConfigFileLoader(config_path, config_profile)) as loader:
+                loader.export(
+                    DataFrame(value),
+                    schema_name=None,
+                    auto_clean_name=False,
+                    table_name=table_name,
+                    index=False,  # Specifies whether to include index in exported table
+                    if_exists='append',  # Specify resolution policy if table name already exists
+                )
+
+Export to BigQuery
+    
+    @data_exporter
+    def export_data_to_big_query(data, **kwargs) -> None:
+        """
+        Exporting data to the BigQuery Data Warehouse.
+        Configuration settings are in 'io_config.yaml' which is in mage server.
+
+        Docs: https://docs.mage.ai/design/data-loading#bigquery
+        """   
         config_path = path.join(get_repo_path(), 'io_config.yaml')
         config_profile = 'default'
-
-        with MySQL.with_config(ConfigFileLoader(config_path, config_profile)) as loader:
-            loader.export(
+        
+        for key, value in data.items():
+            table_id = 'data-pipelines-437522.WorkOrderModule.{}'.format(key)  # Specify the name of the dataset and table to export data to
+            BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).export(
                 DataFrame(value),
-                schema_name=None,
-                auto_clean_name=False,
-                table_name=table_name,
-                index=False,  # Specifies whether to include index in exported table
+                table_id,
                 if_exists='append',  # Specify resolution policy if table name already exists
             )
 
+Once the export is done we can verify the results in HeidiSQL for the database and in BigQuery as well.
+
+![bigquery_4](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_4.png)
+
+![bigquery_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/bigquery_5.png)
+
+![mariadb_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mariadb_3.png)
+
+![mariadb_4](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mariadb_4.png)
 
 ## Create Views on BigQuery
 
