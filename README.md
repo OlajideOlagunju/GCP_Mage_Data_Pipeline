@@ -238,10 +238,13 @@ To configure the pipeline, we need to set our Google Cloud and MariaDB variables
 ![mage_pipeline_5](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_5.png)
 
 
-![mage_pipeline_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_3.png)
-
 
 # Extracting the Data using Mage
+
+Create a new 'data loader' block in your pipeline to get started.
+
+
+
 Connecting to Google Cloud Storage API and converting data to Dataframe
 
 
@@ -376,6 +379,7 @@ Export to MariaDB
 
 # Mage Data Orchestration Summary
 
+![mage_pipeline_3](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/mage_pipeline_3.png)
 
 
 # Data Viz
