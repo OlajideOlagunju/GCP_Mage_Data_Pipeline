@@ -68,7 +68,6 @@ The source data is a spreadsheet containing maintenance work orders associated w
 ![Data Dictionary - Work Order Management Module Dataset](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/3.%20Data%20Dictionary/bin/Data%20Dictionary%20-%20Work%20Order%20Management%20Module%20Dataset.jpg)
 
 
-
 # Database Schema
 Considering this will be a 'heavy write' data pipeline, with frequent updates to the database, and a low number of users (analysts, management users) querying results, I'll use a normalized snowflake schema design for this project. This is in contrast to a denormalized schema model, ensuring data integrity during frequent transactional operations. It will help maintain accuracy and consistency in the work order records. From the dataset, the 'TIME_STAMP' column is not included in the analysis as it only shows the date that the data was exported from the Client's ERP to excel which is not relevant for our project.
 
@@ -296,9 +295,7 @@ View the full source code for this step [here](https://github.com/OlajideOlagunj
 
 
 # Transforming the Data in Mage
-We will use the Mage transformer to carry out data cleaning and transformation steps, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. In the mage transformer ensure to import the pandas library in python as seen below:
-
-    import pandas as pd
+We will use the Mage transformer to carry out data cleaning and transformation steps, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. In the mage transformer ensure to import the pandas library in python i.e. "import pandas as pd".
 
 View the full source code for the Mage transformation step [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/6.%20Mage%20ETL/transform_phase.py).
 
@@ -309,6 +306,7 @@ The [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/mai
 ![source_dataset_info](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/source_dataset_info.png)
 
 ![source_dataset_info_head](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/source_dataset_info_head.png)
+
 
 ## Cleaning the data
 In this step, we will deal with out-of-range data (specifically for time values), impose Data type constraints, find and remove duplicate values.
@@ -321,11 +319,13 @@ Here are a few things we need to do in the data cleaning step:
 - Enforce data type 'length' constraints for each column.
 - Remove duplicate data.
 
+
 ### Removing column(s) excluded from analysis
 The 'TIME_STAMP' column is not included in the analysis. It only shows the date that the data was exported from the Client's ERP to excel which is not relevant for our project. I'll remove it using the '.drop' method in pandas.
     
     df = data
     df = df.drop(columns=['TIME_STAMP'])
+
 
 ### Dealing with 'Out of Range' Datetime values
 In this step, we'd extract all the out of range date values for the 'WORKORDER_STARTED', 'WORKORDER_COMPLETED', 'WORKORDER_ADDED' columns. To do this, we will use the 'to_datetime' method to convert all the non-null data in each column to a datetime object. If the conversion fails, it means that the data is not in the datetime range or is not a valid input. Here is a snippet of the code:
@@ -359,27 +359,120 @@ After the conversion, if there are indeed invalid dates, we would then save it i
 
 ![Out_of_range_datetimes](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/Out_of_range_datetimes.png)
 
+Finally for this step, I'll convert the out of range values to and blank rows to 'NULL'.
+
+    # Converting the out of range values and blank rows to NA values
+    # Attempt to infer format of each date, and return NA for rows where conversion failed
+    for element in date_columns:
+        df[element] = pd.to_datetime(df[element], infer_datetime_format=True, errors = 'coerce') 
+
 
 ### Enforcing Datatypes
-
 Convieniently enough, the first two columns have already been formatted as integer type columns in the Pandas Dataframe.
 
+
 ### Enforcing Datatype length constraints
+We will make sure all the columns are of the right data type so that processing downstream is easy. Here is a snippet of the code:
+
+    # Enforce WORKORDER_ACTIVITY_CODE and WORKORDER_ACTIVITY_DESCRIPTION to 'String' type
+
+    df['WORKORDER_ACTIVITY_CODE'] = df['WORKORDER_ACTIVITY_CODE'].astype('str')
+    df['WORKORDER_ACTIVITY_DESCRIPTION'] = df['WORKORDER_ACTIVITY_DESCRIPTION'].astype('str')
+
+    # String length constraints on WORKORDER_ACTIVITY_CODE and WORKORDER_ACTIVITY_DESCRIPTION
+    # Truncate the specified column to specific length of characters
+    df['WORKORDER_ACTIVITY_CODE'] = df['WORKORDER_ACTIVITY_CODE'].str.slice(stop=12)
+    df['WORKORDER_ACTIVITY_DESCRIPTION'] = df['WORKORDER_ACTIVITY_DESCRIPTION'].str.slice(stop=300)
+
+    # Assert the data type of WORKORDER_NUMBER is int64
+    assert df['WORKORDER_NUMBER'].dtype == 'int64', "WORKORDER_NUMBER should be int64"
+
+    # Assert the data type of WORKORDER_STARTED is datetime64
+    assert pd.api.types.is_datetime64_any_dtype(df['WORKORDER_STARTED']), "WORKORDER_STARTED should be datetime64"
+
+    # Assert the data type of WORKORDER_ACTIVITY_CODE is object (string)
+    assert df['WORKORDER_ACTIVITY_CODE'].dtype == 'object', "WORKORDER_ACTIVITY_CODE should be object (string)"
 
 
 ### Removing Duplicate Records
-We have removed 10,030 Duplicate Records
+Next, we need to remove duplicate values on the dataset. Here is a snippet of the code:
+
+    # Drop duplicates based on 'WORKORDER_NUMBER' column and reset the index
+    df = df.drop_duplicates(subset=['WORKORDER_NUMBER']).reset_index(drop=True)
+    # Create a new column called 'WorkOrderID' for the index
+    df['WorkOrderID'] = df.index
+    # Rearrange the column order
+    df = df[['WorkOrderID', 
+            'WORKORDER_NUMBER', 
+            'WORKORDER_ACTIVITY_CODE', 
+            'WORKORDER_ACTIVITY_DESCRIPTION', 
+            'SVC_REQUEST_NUMBER', 
+            'WORKORDER_STARTED', 
+            'WORKORDER_COMPLETED', 
+            'WORKORDER_ADDED']]
+
+We have removed 10,030 Duplicate Records as shown below:
 
 ![cleaned_source_dataset_info](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/cleaned_source_dataset_info.png)
 
 
 ## Creating Fact and Dimension Tables
+In this step, we'll create 6 tables according to the database schema and map the cleaned data to these tables. 
+
+![Schema - WorkOrderModule DB](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/4.%20Database%20Schema/Schema%20-%20WorkOrderModule%20DB.png)
+
+But before we start with that, we need to ensure the Max IDs for each table from the earlier data loading step is incorporated here in the transformation step. If there is no Max ID from the data loading step earlier, then it most likely means that the individual table is empty and we need to initialize the Max ID variable as zero (0). Here is a snippet of the code:
+
+    # 'max_ids' dictionary containing max IDs for each table
+    max_ids = data_2
+
+    for key, value in max_ids.items():
+        if value is None:
+            max_ids[key] = 0
+
+Next we create dimension tables for the Work Order Activity ("activity_df"), Service Request ("service_request_df"), and Time Dimensions (Time added, started, completed). Here is a snippet of the code:
+
+    # Extract unique Activity data
+    activity_df = df[['WORKORDER_ACTIVITY_CODE', 'WORKORDER_ACTIVITY_DESCRIPTION']].drop_duplicates().dropna().rename(
+        columns={'WORKORDER_ACTIVITY_CODE': 'ActivityCode', 'WORKORDER_ACTIVITY_DESCRIPTION': 'ActivityDescription'}
+    )
+    activity_df['Activity_ID'] = range(max_ids['wo_activity_'] + 1, max_ids['wo_activity_'] + 1 + len(activity_df))
+
+    # Map Activity IDs back to the main DataFrame
+    df = df.merge(activity_df, left_on='WORKORDER_ACTIVITY_CODE', right_on='ActivityCode', how='left')
 
 
+    # Extract unique Started datetime data, and generate IDs starting from max IDs in `max_ids`
+    started_df = df[['WORKORDER_STARTED']].dropna().reset_index(drop=True).rename(
+        columns={'WORKORDER_STARTED': 'Date_time'}
+    )
+    started_df['Started_ID'] = range(max_ids['started_'] + 1, max_ids['started_'] + 1 + len(started_df))
 
+    df = df.merge(started_df, left_on='WORKORDER_STARTED', right_on='Date_time', how='left')
 
+You'd notice that while creating the activity_df table, the .drop_duplicates() is used but not while creating the started_df table. This is because we don't want to remove duplicates for the Time dimensions, since there will be many instances (confirmed from parsing through the data) where the different Work orders instances can have identical datetime values.
 
+Finally we create the main fact table (work_order_fact_df) as shown in the schema.
 
+    # Create the work_order_fact table with unique WorkOrder_IDs
+    work_order_fact_df = df[['WorkOrderID', 'Activity_ID', 'ServiceRequest_ID', 'Started_ID', 'Completed_ID', 'Added_ID', 'WORKORDER_NUMBER']].rename(
+        columns={
+            'WorkOrderID': 'WorkOrder_ID',
+            'WORKORDER_NUMBER': 'WorkOrderNumber'
+        }
+    )
+
+    work_order_fact_df['WorkOrder_ID'] = range(max_ids['work_order_fact'] + 1, max_ids['work_order_fact'] + 1 + len(work_order_fact_df))
+
+We can now put all the transformed tables in a dictionary/hashmap 'work_order_dict' for further processing downstream of the data piepline.
+
+    work_order_dict = {"wo_activity_" : activity_df.to_dict(),
+        "service_request_" : service_request_df.to_dict(),
+        "started_" : started_df.to_dict(),
+        "completed_" : completed_df.to_dict(),
+        "added_" : added_df.to_dict(),
+        "work_order_fact" : work_order_fact_df.to_dict()
+        }
 
 # Loading the Data to MariaDB and BigQuery Data Warehouse
 
