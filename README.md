@@ -296,12 +296,15 @@ View the full source code for this step [here](https://github.com/OlajideOlagunj
 
 
 # Transforming the Data in Mage
+We will use the Mage transformer to carry out data cleaning and transformation steps, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. In the mage transformer ensure to import the pandas library in python as seen below:
 
-We will use the Mage transformer to carry out data cleaning and transformation steps, then we will also create our fact and dimension tables (based on the schema shown earlier). The Transformer block in Mage is very useful as it ensures that data is standardized and prepared for downstream analysis, i.e. when we want to export/load data to the database/data warehouse. 
+    import pandas as pd
 
-However, for the sake of understanding each of the steps in the data transformation which is the 'T' in ETL, I have replicated the transformation in Jupyter notebooks and will use notebook outputs to show the transformation results on each step.
+View the full source code for the Mage transformation step [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/6.%20Mage%20ETL/transform_phase.py).
 
-Viewing the [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv) seen below, it contains 206,058 Rows and 7 Columns. Loading the dataset in a dataframe shows the information below:
+The Mage script should work fine, however, for the sake of understanding each of the steps in the data transformation (which is the 'T' in ETL), I have replicated the transformation process in Jupyter notebooks (See full Jupyter Notebook [here](https://github.com/OlajideOlagunju/GCP_Mage_Data_Pipeline/blob/main/6.%20Mage%20ETL/bin/WorkOrder%20Module%20Data%20Transformation%20in%20Jupyter%20Notebook.ipynb)) and I'll use the notebook outputs to show the transformation results for the steps.
+
+The [Source data](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/1.%20Source%20Data/work-order-management-module.csv) loaded as a dataframe shows that it contains 206,058 Rows and 7 Columns as seen below:
 
 ![source_dataset_info](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/source_dataset_info.png)
 
@@ -312,17 +315,45 @@ In this step, we will deal with out-of-range data (specifically for time values)
 
 Here are a few things we need to do in the data cleaning step:
 - Remove the last column called 'TIME_STAMP' as it only shows the date that the data was exported from the Client's ERP to excel which is not relevant for our project.
-- Capture 'out of range' dates in Datetime Columns and export to repository for record keeping.
+- Capture 'out of range' dates in Datetime Columns and export to VM for record keeping.
 - Converting the out of range values to 'NA' values.
 - Enforce data type constraints for each column.
 - Enforce data type 'length' constraints for each column.
 - Remove duplicate data.
 
 ### Removing column(s) excluded from analysis
-
+The 'TIME_STAMP' column is not included in the analysis. It only shows the date that the data was exported from the Client's ERP to excel which is not relevant for our project. I'll remove it using the '.drop' method in pandas.
+    
+    df = data
+    df = df.drop(columns=['TIME_STAMP'])
 
 ### Dealing with 'Out of Range' Datetime values
+In this step, we'd extract all the out of range date values for the 'WORKORDER_STARTED', 'WORKORDER_COMPLETED', 'WORKORDER_ADDED' columns. To do this, we will use the 'to_datetime' method to convert all the non-null data in each column to a datetime object. If the conversion fails, it means that the data is not in the datetime range or is not a valid input. Here is a snippet of the code:
 
+    invalid_dates = pd.DataFrame()
+
+    for element in date_columns:
+        # where to_datetime fails. 
+        # dt means datetime
+        not_dt = pd.to_datetime(df[element], errors='coerce')
+
+        # where column is not null and to_datetime method fails. 
+        # ofr means out of range
+        ofr_dt = not_dt.isna() & df[element].notnull()
+        
+        # Important to do the previous step as there are several blank rows for the Datetime, which makes sense because the Work order may not have been started and/or completed at the time of processing the data. So we are looking for 'not null' rows that are also incorrect datetimes.
+        
+        ofr_dt_ = df[[element, "WORKORDER_NUMBER"]].loc[ofr_dt == True]
+        ofr_dt_ = pd.DataFrame(ofr_dt_)
+        ofr_dt_ = ofr_dt_.assign(Time_type = element)
+        ofr_dt_ = ofr_dt_.rename(columns={element: "Wrong_Datetimes"})
+        
+        invalid_dates = pd.concat([invalid_dates, ofr_dt_])
+
+After the conversion, if there are indeed invalid dates, we would then save it in a spreadsheet on the VM as shown below:
+
+    if not invalid_dates.empty:
+        invalid_dates.to_csv('/home/src/cleaning_export_wrong_dates.csv')
 
 ![compute_engine_7](https://github.com/OlaOlagunju/GCP_Mage_Data_Pipeline/blob/main/8.%20Images/compute_engine_7.png)
 
